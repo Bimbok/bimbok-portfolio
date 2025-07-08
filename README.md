@@ -113,7 +113,7 @@ Stay tuned — more topics and tutorials coming!
 
 ## How to Reach Me
 
-- [![Gmail](https://img.shields.io/badge/Gmail-bimbokmkj@gmail.com-D14836?style=flat&logo=gmail&logoColor=white)](mailto:bimbokmkj@gmail.com)
+- [![Gmail](https://img.shields.io/badge/Gmail-Bimbok-D14836?style=flat&logo=gmail&logoColor=white)](mailto:bimbokmkj@gmail.com)
 - [![LinkedIn](https://img.shields.io/badge/LinkedIn-Bratik-blue?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/bratik-mukherjee-1067462a6/)
 - Let’s talk code, collab, or Genshin builds anytime!
 
