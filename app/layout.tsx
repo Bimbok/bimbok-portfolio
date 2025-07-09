@@ -9,15 +9,20 @@ export const metadata: Metadata = {
   title: "Bimbok - Full Stack Developer & Digital Creator",
   description:
     "Portfolio of Bimbok Bratik Mukherjee- B.Tech IT student, Full Stack Developer specializing in MERN stack, Python, and creating accessible digital solutions.",
-  keywords: "Bimbok, Bratik, Bratik Mukherjee, Full Stack Developer, React, Node.js, Python, MERN Stack, Web Development, Portfolio",
+  keywords:
+    "Bimbok, Bratik, Bratik Mukherjee, Full Stack Developer, React, Node.js, Python, MERN Stack, Web Development, Portfolio",
   authors: [{ name: "Bimbok" }],
   openGraph: {
     title: "Bimbok - Full Stack Developer & Digital Creator",
-    description: "Building digital solutions that make technology accessible to everyone",
+    description:
+      "Building digital solutions that make technology accessible to everyone",
     type: "website",
   },
-    generator: 'v0.dev'
-}
+  icons: {
+    icon: "/favicon.ico",
+  },
+  generator: "bimbok",
+};
 
 export default function RootLayout({
   children,
