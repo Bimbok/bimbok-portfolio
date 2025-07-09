@@ -46,8 +46,8 @@ const projects = [
     description:
       "This anime-inspired portfolio website built with Next.js, featuring smooth animations and responsive design.",
     tech: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
-    github: "#",
-    demo: "#",
+    github: "https://github.com/Bimbok/bimbok-portfolio",
+    demo: "https://bimbok-portfolio.vercel.app/",
     icon: Code,
     gradient: "from-purple-500 to-indigo-500",
   },
