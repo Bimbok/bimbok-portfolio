@@ -1,9 +1,9 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef, useState } from "react"
-import { ExternalLink, Github, Zap, Brain, Code } from "lucide-react"
+import { ExternalLink, Github, Zap, Brain, Code, ArrowUpRight } from "lucide-react"
+import { IconWrapper } from "./ui/icon-wrapper"
 
 interface ProjectsProps {
   darkMode: boolean
@@ -23,7 +23,7 @@ const projects = [
   {
     id: 2,
     title: "Weather - Weathea",
-    description: "A beautiful and feature-rich weather application. ",
+    description: "A beautiful and feature-rich weather application. Built for simplicity.",
     tech: ["MongoDB", "Express.js", "Node.js", "Stripe"],
     github: "https://github.com/Bimbok/weatherApp",
     demo: "https://weathia.vercel.app/",
@@ -33,7 +33,7 @@ const projects = [
   {
     id: 3,
     title: "Real-time Chat Application",
-    description: "Multi-room chat application with real-time messaging, file sharing, and user presence indicators.",
+    description: "Multi-room chat application with real-time messaging, file sharing, and user presence.",
     tech: ["Socket.IO", "Node.js", "Express", "MongoDB", "React"],
     github: "https://github.com/Bimbok/Now-Chat",
     demo: "https://now-chat-4e5c.onrender.com/",
@@ -43,8 +43,7 @@ const projects = [
   {
     id: 4,
     title: "Portfolio Website",
-    description:
-      "This anime-inspired portfolio website built with Next.js, featuring smooth animations and responsive design.",
+    description: "This anime-inspired portfolio website built with Next.js, featuring smooth animations.",
     tech: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
     github: "https://github.com/Bimbok/bimbok-portfolio",
     demo: "https://bimbok-portfolio.vercel.app/",
@@ -56,7 +55,6 @@ const projects = [
 export default function Projects({ darkMode }: ProjectsProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const [flippedCard, setFlippedCard] = useState<number | null>(null)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -74,35 +72,33 @@ export default function Projects({ darkMode }: ProjectsProps) {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
     },
   }
 
   return (
-    <section id="projects" className="py-20 px-4" ref={ref}>
+    <section id="projects" className="py-24 px-4 relative" ref={ref}>
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
           <h2
-            className={`text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r ${
+            className={`text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r ${
               darkMode ? "from-pink-400 to-purple-400" : "from-pink-600 to-purple-600"
             } bg-clip-text text-transparent`}
           >
-            Featured Projects
+            Proof of Concept
           </h2>
 
           <div
-            className={`w-24 h-1 mx-auto mb-8 bg-gradient-to-r ${
-              darkMode ? "from-pink-400 to-purple-400" : "from-pink-600 to-purple-600"
-            } rounded-full`}
+            className={`w-32 h-1.5 mx-auto mb-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full`}
           />
 
-          <p className={`text-lg ${darkMode ? "text-gray-300" : "text-gray-700"} max-w-2xl mx-auto`}>
-            Here are some of my recent projects that showcase my skills and passion for development
+          <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-700"} max-w-2xl mx-auto font-light leading-relaxed`}>
+            Selected works that define my technical expertise and creative vision.
           </p>
         </motion.div>
 
@@ -110,128 +106,80 @@ export default function Projects({ darkMode }: ProjectsProps) {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid md:grid-cols-2 gap-8"
+          className="grid md:grid-cols-2 gap-10"
         >
-          {projects.map((project) => {
-            const IconComponent = project.icon
-            const isFlipped = flippedCard === project.id
-
-            return (
-              <motion.div
-                key={project.id}
-                variants={itemVariants}
-                className="relative h-72 sm:h-80 perspective-1000"
-                onMouseEnter={() => setFlippedCard(project.id)}
-                onMouseLeave={() => setFlippedCard(null)}
+          {projects.map((project) => (
+            <motion.div
+              key={project.id}
+              variants={itemVariants}
+              className={`group relative rounded-[2.5rem] p-1 overflow-hidden transition-all duration-500 ${
+                darkMode ? "hover:shadow-[0_0_40px_rgba(236,72,153,0.1)]" : "hover:shadow-[0_0_40px_rgba(236,72,153,0.05)]"
+              }`}
+            >
+              {/* Card Background with Animated Border Effect */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-700`} />
+              
+              <div
+                className={`relative w-full h-full rounded-[2.4rem] p-8 md:p-10 backdrop-blur-2xl border transition-all duration-500 ${
+                  darkMode 
+                    ? "bg-slate-900/80 border-white/5 group-hover:bg-slate-900/40" 
+                    : "bg-white/90 border-black/5 group-hover:bg-white/70 shadow-2xl shadow-black/5"
+                }`}
               >
-                <motion.div
-                  className="relative w-full h-full transition-transform duration-700 transform-style-preserve-3d"
-                  animate={{ rotateY: isFlipped ? 180 : 0 }}
-                >
-                  {/* Front of card */}
-                  <div
-                    className={`absolute inset-0 w-full h-full backface-hidden rounded-2xl p-4 sm:p-6 backdrop-blur-sm border ${
-                      darkMode ? "bg-white/5 border-white/10" : "bg-white/70 border-white/20"
-                    } shadow-xl flex flex-col`}
-                  >
-                    <div
-                      className={`w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-r ${project.gradient} flex items-center justify-center mb-4 sm:mb-6 flex-shrink-0`}
+                <div className="flex justify-between items-start mb-8">
+                  <IconWrapper 
+                    icon={project.icon} 
+                    gradient={`bg-gradient-to-r ${project.gradient}`} 
+                    darkMode={darkMode} 
+                  />
+                  <div className="flex gap-3">
+                    <motion.a 
+                      href={project.github}
+                      whileHover={{ y: -3 }}
+                      className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
                     >
-                      <IconComponent className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                    </div>
-
-                    <h3
-                      className={`text-xl sm:text-2xl font-bold mb-3 sm:mb-4 ${darkMode ? "text-white" : "text-gray-800"} flex-shrink-0`}
+                      <Github className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+                    </motion.a>
+                    <motion.a 
+                      href={project.demo}
+                      whileHover={{ y: -3 }}
+                      className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
                     >
-                      {project.title}
-                    </h3>
-
-                    <p
-                      className={`text-sm sm:text-base leading-relaxed ${darkMode ? "text-gray-300" : "text-gray-600"} flex-grow mb-4`}
-                    >
-                      {project.description}
-                    </p>
-
-                    <div className="flex-shrink-0 mt-auto">
-                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                        {project.tech.slice(0, 3).map((tech) => (
-                          <span
-                            key={tech}
-                            className={`px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${
-                              darkMode ? "bg-white/10 text-gray-300" : "bg-gray-100 text-gray-700"
-                            }`}
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                        {project.tech.length > 3 && (
-                          <span
-                            className={`px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${
-                              darkMode ? "bg-white/10 text-gray-300" : "bg-gray-100 text-gray-700"
-                            }`}
-                          >
-                            +{project.tech.length - 3}
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                      <ExternalLink className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+                    </motion.a>
                   </div>
+                </div>
 
-                  {/* Back of card */}
-                  <div
-                    className={`absolute inset-0 w-full h-full backface-hidden rounded-2xl p-6 backdrop-blur-sm border ${
-                      darkMode ? "bg-white/5 border-white/10" : "bg-white/70 border-white/20"
-                    } shadow-xl rotate-y-180 flex flex-col justify-center items-center text-center`}
-                  >
-                    <h3 className={`text-2xl font-bold mb-6 ${darkMode ? "text-white" : "text-gray-800"}`}>
-                      Technologies Used
-                    </h3>
+                <h3 className={`text-3xl font-black mb-4 ${darkMode ? "text-white" : "text-gray-900"} tracking-tight`}>
+                  {project.title}
+                </h3>
 
-                    <div className="flex flex-wrap gap-3 justify-center mb-8">
-                      {project.tech.map((tech) => (
-                        <span
-                          key={tech}
-                          className={`px-4 py-2 rounded-full text-sm font-medium ${
-                            darkMode
-                              ? "bg-gradient-to-r from-pink-500/20 to-purple-500/20 text-pink-300 border border-pink-500/30"
-                              : "bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 border border-pink-200"
-                          }`}
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
+                <p className={`text-lg leading-relaxed mb-8 ${darkMode ? "text-gray-400" : "text-gray-600"} font-light`}>
+                  {project.description}
+                </p>
 
-                    <div className="flex gap-4">
-                      <motion.a
-                        href={project.github}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
-                          darkMode
-                            ? "bg-white/10 text-white hover:bg-white/20"
-                            : "bg-gray-800 text-white hover:bg-gray-700"
-                        }`}
-                      >
-                        <Github className="w-4 h-4" />
-                        Code
-                      </motion.a>
+                <div className="flex flex-wrap gap-2 mt-auto">
+                  {project.tech.map((tech) => (
+                    <span
+                      key={tech}
+                      className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border ${
+                        darkMode 
+                          ? "bg-white/5 border-white/10 text-gray-400" 
+                          : "bg-black/5 border-black/5 text-gray-500"
+                      }`}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
 
-                      <motion.a
-                        href={project.demo}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-full font-semibold bg-gradient-to-r ${project.gradient} text-white transition-all duration-300 hover:shadow-lg`}
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        Demo
-                      </motion.a>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            )
-          })}
+                {/* Decorative Element */}
+                <div className="absolute bottom-10 right-10 opacity-0 group-hover:opacity-40 transition-opacity translate-x-4 group-hover:translate-x-0 duration-500">
+                   <ArrowUpRight className={`w-10 h-10 ${darkMode ? "text-white" : "text-gray-900"}`} />
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

@@ -2,26 +2,13 @@
 
 import type React from "react"
 
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef, useState } from "react"
-import { Send, Mail, MapPin, Github, Linkedin, Twitter, Youtube } from "lucide-react"
+import { Send, Mail, MapPin, Github, Linkedin, Youtube, Sparkles } from "lucide-react"
+import { IconWrapper } from "./ui/icon-wrapper"
 
 interface ContactProps {
   darkMode: boolean
-}
-
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault()
-
-  const { name, email, message } = formData
-
-  const subject = encodeURIComponent(`Message from ${name}`)
-  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)
-
-  const mailtoLink = `mailto:bimbok@example.com?subject=${subject}&body=${body}`
-
-  window.location.href = mailtoLink
 }
 
 export default function Contact({ darkMode }: ContactProps) {
@@ -35,8 +22,10 @@ export default function Contact({ darkMode }: ContactProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted:", formData)
+    const { name, email, message } = formData
+    const subject = encodeURIComponent(`Message from ${name}`)
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)
+    window.location.href = `mailto:bimbokmkj@gmail.com?subject=${subject}&body=${body}`
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -51,157 +40,141 @@ export default function Contact({ darkMode }: ContactProps) {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1,
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
       },
     },
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
     },
   }
 
-  // Floating elements animation
-  const floatingElements = Array.from({ length: 6 }, (_, i) => (
-    <motion.div
-      key={i}
-      className={`absolute w-2 h-2 rounded-full ${darkMode ? "bg-pink-400/30" : "bg-pink-500/30"}`}
-      style={{
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-      }}
-      animate={{
-        y: [0, -20, 0],
-        x: [0, Math.random() * 20 - 10, 0],
-        scale: [1, 1.2, 1],
-        opacity: [0.3, 0.8, 0.3],
-      }}
-      transition={{
-        duration: 3 + Math.random() * 2,
-        repeat: Number.POSITIVE_INFINITY,
-        delay: Math.random() * 2,
-        ease: "easeInOut",
-      }}
-    />
-  ))
-
   return (
-    <section id="contact" className="py-20 px-4 relative overflow-hidden" ref={ref}>
-      {/* Floating background elements */}
-      {floatingElements}
-
+    <section id="contact" className="py-24 px-4 relative overflow-hidden" ref={ref}>
       <div className="max-w-6xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
+           <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-400 text-sm font-semibold mb-6 backdrop-blur-md"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Open for Collaboration</span>
+          </motion.div>
+
           <h2
-            className={`text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r ${
-              darkMode ? "from-pink-400 to-purple-400" : "from-pink-600 to-purple-600"
+            className={`text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r ${
+              darkMode ? "from-pink-400 via-purple-400 to-blue-400" : "from-pink-600 via-purple-600 to-blue-600"
             } bg-clip-text text-transparent`}
           >
-            Let's Connect
+            Let's Build Together
           </h2>
 
           <div
-            className={`w-24 h-1 mx-auto mb-8 bg-gradient-to-r ${
-              darkMode ? "from-pink-400 to-purple-400" : "from-pink-600 to-purple-600"
-            } rounded-full`}
+            className={`w-32 h-1.5 mx-auto mb-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full`}
           />
 
-          <p className={`text-lg ${darkMode ? "text-gray-300" : "text-gray-700"} max-w-2xl mx-auto`}>
-            I'm always open to collaborating on exciting projects and growing as a developer. Let's build something
-            amazing together!
+          <p className={`text-xl ${darkMode ? "text-gray-300" : "text-gray-700"} max-w-2xl mx-auto font-light leading-relaxed`}>
+            Have a project in mind or just want to say hello? Drop me a message and let's start something amazing.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-5 gap-10">
           {/* Contact Form */}
-          <motion.div variants={containerVariants} initial="hidden" animate={isInView ? "visible" : "hidden"}>
+          <motion.div 
+            variants={containerVariants} 
+            initial="hidden" 
+            animate={isInView ? "visible" : "hidden"}
+            className="lg:col-span-3"
+          >
             <motion.div
               variants={itemVariants}
-              className={`p-8 rounded-3xl backdrop-blur-sm border ${
-                darkMode ? "bg-white/5 border-white/10" : "bg-white/70 border-white/20"
-              } shadow-xl`}
+              className={`p-10 rounded-[3rem] backdrop-blur-2xl border ${
+                darkMode ? "bg-white/5 border-white/10" : "bg-white border-black/5 shadow-2xl"
+              } relative overflow-hidden`}
             >
-              <h3 className={`text-2xl font-bold mb-6 ${darkMode ? "text-white" : "text-gray-800"}`}>
-                Send me a message
-              </h3>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/5 blur-[100px] rounded-full pointer-events-none" />
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <motion.div variants={itemVariants}>
-                  <label className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className={`w-full px-4 py-3 rounded-xl border transition-all duration-300 ${
-                      darkMode
-                        ? "bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-pink-400"
-                        : "bg-white/80 border-gray-200 text-gray-800 placeholder-gray-500 focus:border-pink-500"
-                    } focus:outline-none focus:ring-2 focus:ring-pink-500/20`}
-                    placeholder="Your name"
-                  />
-                </motion.div>
+              <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <motion.div variants={itemVariants}>
+                    <label className={`block text-xs font-black tracking-[0.2em] uppercase mb-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Your Name
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className={`w-full px-6 py-4 rounded-2xl border transition-all duration-500 font-medium ${
+                        darkMode
+                          ? "bg-white/5 border-white/10 text-white placeholder-gray-600 focus:border-pink-500/50"
+                          : "bg-gray-50 border-gray-100 text-gray-800 placeholder-gray-400 focus:border-pink-500/30 shadow-inner"
+                      } focus:outline-none focus:ring-4 focus:ring-pink-500/10`}
+                      placeholder="e.g. Bratik Mukherjee"
+                    />
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <label className={`block text-xs font-black tracking-[0.2em] uppercase mb-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className={`w-full px-6 py-4 rounded-2xl border transition-all duration-500 font-medium ${
+                        darkMode
+                          ? "bg-white/5 border-white/10 text-white placeholder-gray-600 focus:border-pink-500/50"
+                          : "bg-gray-50 border-gray-100 text-gray-800 placeholder-gray-400 focus:border-pink-500/30 shadow-inner"
+                      } focus:outline-none focus:ring-4 focus:ring-pink-500/10`}
+                      placeholder="name@company.com"
+                    />
+                  </motion.div>
+                </div>
 
                 <motion.div variants={itemVariants}>
-                  <label className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className={`w-full px-4 py-3 rounded-xl border transition-all duration-300 ${
-                      darkMode
-                        ? "bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-pink-400"
-                        : "bg-white/80 border-gray-200 text-gray-800 placeholder-gray-500 focus:border-pink-500"
-                    } focus:outline-none focus:ring-2 focus:ring-pink-500/20`}
-                    placeholder="your.email@example.com"
-                  />
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                  <label className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-                    Message
+                  <label className={`block text-xs font-black tracking-[0.2em] uppercase mb-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                    How can I help?
                   </label>
                   <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     required
-                    rows={5}
-                    className={`w-full px-4 py-3 rounded-xl border transition-all duration-300 resize-none ${
+                    rows={4}
+                    className={`w-full px-6 py-4 rounded-2xl border transition-all duration-500 font-medium resize-none ${
                       darkMode
-                        ? "bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-pink-400"
-                        : "bg-white/80 border-gray-200 text-gray-800 placeholder-gray-500 focus:border-pink-500"
-                    } focus:outline-none focus:ring-2 focus:ring-pink-500/20`}
-                    placeholder="Tell me about your project or just say hi!"
+                        ? "bg-white/5 border-white/10 text-white placeholder-gray-600 focus:border-pink-500/50"
+                        : "bg-gray-50 border-gray-100 text-gray-800 placeholder-gray-400 focus:border-pink-500/30 shadow-inner"
+                    } focus:outline-none focus:ring-4 focus:ring-pink-500/10`}
+                    placeholder="Tell me about your vision..."
                   />
                 </motion.div>
 
                 <motion.button
                   variants={itemVariants}
                   type="submit"
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileHover={{ scale: 1.02, x: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
+                  className="group relative w-full px-8 py-5 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-black tracking-widest uppercase rounded-2xl shadow-xl hover:shadow-pink-500/20 transition-all duration-500 flex items-center justify-center gap-3"
                 >
-                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  Send Message
+                  <span className="relative z-10">Launch Message</span>
+                  <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
                 </motion.button>
               </form>
             </motion.div>
@@ -212,74 +185,61 @@ export default function Contact({ darkMode }: ContactProps) {
             variants={containerVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
-            className="space-y-8"
+            className="lg:col-span-2 space-y-6"
           >
             <motion.div
               variants={itemVariants}
-              className={`p-6 rounded-2xl backdrop-blur-sm border ${
-                darkMode ? "bg-white/5 border-white/10" : "bg-white/70 border-white/20"
-              } shadow-xl hover:shadow-2xl transition-all duration-300 group`}
-              whileHover={{ scale: 1.02, y: -5 }}
+              className={`p-8 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-500 ${
+                darkMode ? "bg-white/5 border-white/10" : "bg-white/80 border-black/5 shadow-xl"
+              } flex items-center gap-6 group`}
             >
-              <div className="flex items-center gap-4">
-                <div
-                  className={`w-12 h-12 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center`}
-                >
-                  <Mail className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h4 className={`font-bold text-lg ${darkMode ? "text-white" : "text-gray-800"}`}>Email</h4>
-                  <p className={`${darkMode ? "text-gray-300" : "text-gray-600"}`}>bimbok@example.com</p>
-                </div>
+              <IconWrapper icon={Mail} gradient="from-pink-500 to-purple-500" darkMode={darkMode} />
+              <div>
+                <h4 className={`text-xs font-black tracking-[0.2em] uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Email</h4>
+                <p className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>bimbokmkj@gmail.com</p>
               </div>
             </motion.div>
 
             <motion.div
               variants={itemVariants}
-              className={`p-6 rounded-2xl backdrop-blur-sm border ${
-                darkMode ? "bg-white/5 border-white/10" : "bg-white/70 border-white/20"
-              } shadow-xl hover:shadow-2xl transition-all duration-300 group`}
-              whileHover={{ scale: 1.02, y: -5 }}
+              className={`p-8 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-500 ${
+                darkMode ? "bg-white/5 border-white/10" : "bg-white/80 border-black/5 shadow-xl"
+              } flex items-center gap-6 group`}
             >
-              <div className="flex items-center gap-4">
-                <div
-                  className={`w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center`}
-                >
-                  <MapPin className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h4 className={`font-bold text-lg ${darkMode ? "text-white" : "text-gray-800"}`}>Location</h4>
-                  <p className={`${darkMode ? "text-gray-300" : "text-gray-600"}`}>Kolkata, West Bengal, India</p>
-                </div>
+              <IconWrapper icon={MapPin} gradient="from-blue-500 to-cyan-500" darkMode={darkMode} />
+              <div>
+                <h4 className={`text-xs font-black tracking-[0.2em] uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Location</h4>
+                <p className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>Kolkata, WB, India</p>
               </div>
             </motion.div>
 
             <motion.div
               variants={itemVariants}
-              className={`p-6 rounded-2xl backdrop-blur-sm border ${
-                darkMode ? "bg-white/5 border-white/10" : "bg-white/70 border-white/20"
-              } shadow-xl`}
+              className={`p-10 rounded-[3rem] backdrop-blur-xl border ${
+                darkMode ? "bg-white/5 border-white/10" : "bg-white border-black/5 shadow-xl"
+              }`}
             >
-              <h4 className={`font-bold text-lg mb-4 ${darkMode ? "text-white" : "text-gray-800"}`}>Follow Me</h4>
-              <div className="flex gap-4">
+              <h4 className={`text-xs font-black tracking-[0.2em] uppercase mb-8 text-center ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Social Matrix</h4>
+              <div className="flex justify-center gap-6">
                 {[
-                  { icon: Github, href: "https://github.com/Bimbok", color: "from-gray-600 to-gray-800" },
-                  { icon: Linkedin, href: "https://www.linkedin.com/in/bratik-mukherjee-1067462a6/", color: "from-blue-600 to-blue-800" },
-                  { icon: Youtube, href: "https://youtube.com/@hellohellothisibimbok", color: "from-red-400 to-red-600" },
-                ].map((social, index) => {
-                  const IconComponent = social.icon
-                  return (
-                    <motion.a
-                      key={index}
-                      href={social.href}
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`w-12 h-12 rounded-xl bg-gradient-to-r ${social.color} flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300`}
-                    >
-                      <IconComponent className="w-5 h-5" />
-                    </motion.a>
-                  )
-                })}
+                  { icon: Github, href: "https://github.com/Bimbok", gradient: "from-gray-600 to-gray-900" },
+                  { icon: Linkedin, href: "https://www.linkedin.com/in/bratik-mukherjee-1067462a6/", gradient: "from-blue-600 to-indigo-700" },
+                  { icon: Youtube, href: "https://youtube.com/@hellohellothisibimbok", gradient: "from-red-500 to-rose-700" },
+                ].map((social, index) => (
+                  <motion.a
+                    key={index}
+                    href={social.href}
+                    whileHover={{ y: -5, scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="relative group"
+                  >
+                    <IconWrapper 
+                      icon={social.icon} 
+                      gradient={`bg-gradient-to-r ${social.gradient}`} 
+                      darkMode={darkMode} 
+                    />
+                  </motion.a>
+                ))}
               </div>
             </motion.div>
           </motion.div>
