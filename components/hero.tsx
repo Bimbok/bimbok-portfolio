@@ -6,9 +6,10 @@ import { useEffect, useState } from "react"
 
 interface HeroProps {
   darkMode: boolean
+  reducedEffects?: boolean
 }
 
-export default function Hero({ darkMode }: HeroProps) {
+export default function Hero({ darkMode, reducedEffects = false }: HeroProps) {
   const [mounted, setMounted] = useState(false)
   
   // Mouse tracking for 3D tilt
@@ -23,6 +24,11 @@ export default function Hero({ darkMode }: HeroProps) {
 
   useEffect(() => {
     setMounted(true)
+
+    if (reducedEffects) {
+      return
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window
       x.set((e.clientX / innerWidth) - 0.5)
@@ -30,7 +36,7 @@ export default function Hero({ darkMode }: HeroProps) {
     }
     window.addEventListener("mousemove", handleMouseMove)
     return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [x, y])
+  }, [x, y, reducedEffects])
 
   if (!mounted) return null
 
@@ -40,36 +46,50 @@ export default function Hero({ darkMode }: HeroProps) {
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
           className="absolute top-[10%] left-[15%] w-64 h-64 bg-pink-500/20 rounded-full blur-[80px]"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 100, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          animate={
+            reducedEffects
+              ? { opacity: 0.6 }
+              : {
+                  x: [0, 50, 0],
+                  y: [0, 100, 0],
+                  scale: [1, 1.2, 1],
+                }
+          }
+          transition={
+            reducedEffects ? { duration: 0.2 } : { duration: 15, repeat: Infinity, ease: "linear" }
+          }
         />
         <motion.div
           className="absolute bottom-[20%] right-[15%] w-80 h-80 bg-purple-500/20 rounded-full blur-[100px]"
-          animate={{
-            x: [0, -80, 0],
-            y: [0, -40, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          animate={
+            reducedEffects
+              ? { opacity: 0.6 }
+              : {
+                  x: [0, -80, 0],
+                  y: [0, -40, 0],
+                  scale: [1, 1.1, 1],
+                }
+          }
+          transition={
+            reducedEffects ? { duration: 0.2 } : { duration: 18, repeat: Infinity, ease: "linear" }
+          }
         />
       </div>
 
       {/* Floating 3D Icons */}
-      <motion.div
-        className="absolute top-1/4 right-[10%] opacity-20 hidden lg:block"
-        animate={{ y: [0, -30, 0], rotate: [0, 15, 0] }}
-        transition={{ duration: 5, repeat: Infinity }}
-      >
-        <Rocket className={`w-20 h-20 ${darkMode ? "text-pink-400" : "text-pink-600"}`} />
-      </motion.div>
+      {!reducedEffects && (
+        <motion.div
+          className="absolute top-1/4 right-[10%] opacity-20 hidden lg:block"
+          animate={{ y: [0, -30, 0], rotate: [0, 15, 0] }}
+          transition={{ duration: 5, repeat: Infinity }}
+        >
+          <Rocket className={`w-20 h-20 ${darkMode ? "text-pink-400" : "text-pink-600"}`} />
+        </motion.div>
+      )}
 
       <div className="text-center z-10 px-4">
         <motion.div
-          style={{ rotateX, rotateY }}
+          style={reducedEffects ? undefined : { rotateX, rotateY }}
           className="transition-transform duration-200"
         >
           <motion.div
@@ -151,8 +171,8 @@ export default function Hero({ darkMode }: HeroProps) {
 
       <motion.div
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
+        animate={reducedEffects ? undefined : { y: [0, 10, 0] }}
+        transition={reducedEffects ? undefined : { duration: 2, repeat: Infinity }}
       >
         <span className={`text-[10px] font-bold tracking-[0.3em] uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
           Scroll Down

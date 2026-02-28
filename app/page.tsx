@@ -1,5 +1,6 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Hero from "@/components/hero"
@@ -9,10 +10,11 @@ import Projects from "@/components/projects"
 import Contact from "@/components/contact"
 import Navigation from "@/components/navigation"
 import ThemeToggle from "@/components/theme-toggle"
-import ParticleBackground from "@/components/particle-background"
-import CustomCursor from "@/components/custom-cursor"
-import CommandDeck from "@/components/command-deck"
-import DevMascot from "@/components/dev-mascot"
+
+const ParticleBackground = dynamic(() => import("@/components/particle-background"), { ssr: false })
+const CustomCursor = dynamic(() => import("@/components/custom-cursor"), { ssr: false })
+const CommandDeck = dynamic(() => import("@/components/command-deck"), { ssr: false })
+const DevMascot = dynamic(() => import("@/components/dev-mascot"), { ssr: false })
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false)
@@ -29,8 +31,19 @@ export default function Home() {
 
     const coarsePointer = window.matchMedia("(pointer: coarse)")
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const nav = navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string }
+      deviceMemory?: number
+    }
+    const lowMemory = typeof nav.deviceMemory === "number" && nav.deviceMemory <= 4
+    const lowCpu = typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency <= 4
+    const dataSaver = Boolean(nav.connection?.saveData)
+    const slowNetwork = Boolean(
+      nav.connection?.effectiveType && ["slow-2g", "2g", "3g"].includes(nav.connection.effectiveType),
+    )
+
     const updateEffects = () => {
-      setReducedEffects(coarsePointer.matches || reducedMotion.matches)
+      setReducedEffects(coarsePointer.matches || reducedMotion.matches || lowMemory || lowCpu || dataSaver || slowNetwork)
     }
 
     updateEffects()
@@ -104,7 +117,7 @@ export default function Home() {
       <Navigation darkMode={darkMode} />
       <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
       <CommandDeck darkMode={darkMode} setDarkMode={setDarkMode} onSurprise={triggerPartyMode} />
-      <DevMascot darkMode={darkMode} />
+      <DevMascot darkMode={darkMode} reducedEffects={reducedEffects} />
 
       {partyMode && (
         <div className="fixed inset-0 pointer-events-none z-[65]">
@@ -140,7 +153,7 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="relative z-10"
         >
-          <Hero darkMode={darkMode} />
+          <Hero darkMode={darkMode} reducedEffects={reducedEffects} />
           <About darkMode={darkMode} />
           <Skills darkMode={darkMode} />
           <Projects darkMode={darkMode} />

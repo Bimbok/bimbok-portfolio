@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 
 interface DevMascotProps {
   darkMode: boolean
+  reducedEffects?: boolean
 }
 
 const lines = [
@@ -15,7 +16,7 @@ const lines = [
   "Hidden skill unlocked: clean UI with strong UX.",
 ]
 
-export default function DevMascot({ darkMode }: DevMascotProps) {
+export default function DevMascot({ darkMode, reducedEffects = false }: DevMascotProps) {
   const [lineIndex, setLineIndex] = useState(0)
   const [showBubble, setShowBubble] = useState(false)
 
@@ -52,8 +53,8 @@ export default function DevMascot({ darkMode }: DevMascotProps) {
         dragConstraints={{ top: -120, left: -40, right: 40, bottom: 20 }}
         whileDrag={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 2.4, repeat: Number.POSITIVE_INFINITY }}
+        animate={reducedEffects ? undefined : { y: [0, -6, 0] }}
+        transition={reducedEffects ? undefined : { duration: 2.4, repeat: Number.POSITIVE_INFINITY }}
         className={`relative h-14 w-14 rounded-full border shadow-lg ${
           darkMode
             ? "bg-gradient-to-br from-pink-500/90 to-purple-600/90 border-white/20"
