@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 interface DevMascotProps {
   darkMode: boolean
@@ -19,6 +20,40 @@ const lines = [
 export default function DevMascot({ darkMode, reducedEffects = false }: DevMascotProps) {
   const [lineIndex, setLineIndex] = useState(0)
   const [showBubble, setShowBubble] = useState(false)
+  const [path, setPath] = useState<Array<{ x: number; y: number }>>([])
+  const size = 68
+  const margin = 16
+
+  const fallbackPoint = useMemo(() => ({ x: 16, y: 16 }), [])
+
+  useEffect(() => {
+    if (reducedEffects) {
+      setPath([fallbackPoint])
+      return
+    }
+
+    const buildPath = () => {
+      const maxX = Math.max(32, window.innerWidth - size - margin)
+      const maxY = Math.max(120, window.innerHeight - size - margin)
+      const minY = 90
+
+      const points = [
+        { x: margin, y: minY + 20 },
+        { x: maxX * 0.75, y: minY + 50 },
+        { x: maxX, y: maxY * 0.45 },
+        { x: maxX * 0.55, y: maxY },
+        { x: margin + 12, y: maxY * 0.72 },
+        { x: maxX * 0.35, y: minY },
+        { x: margin, y: minY + 20 },
+      ]
+
+      setPath(points)
+    }
+
+    buildPath()
+    window.addEventListener("resize", buildPath)
+    return () => window.removeEventListener("resize", buildPath)
+  }, [reducedEffects, fallbackPoint])
 
   const onClick = () => {
     setLineIndex((prev) => (prev + 1) % lines.length)
@@ -27,7 +62,26 @@ export default function DevMascot({ darkMode, reducedEffects = false }: DevMasco
   }
 
   return (
-    <div className="fixed right-5 bottom-6 z-[70]">
+    <motion.div
+      className="fixed top-0 left-0 z-[70] pointer-events-none"
+      animate={
+        reducedEffects || path.length === 0
+          ? { x: fallbackPoint.x, y: fallbackPoint.y }
+          : {
+              x: path.map((point) => point.x),
+              y: path.map((point) => point.y),
+            }
+      }
+      transition={
+        reducedEffects || path.length === 0
+          ? { duration: 0.2 }
+          : {
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }
+      }
+    >
       <AnimatePresence>
         {showBubble && (
           <motion.div
@@ -35,7 +89,7 @@ export default function DevMascot({ darkMode, reducedEffects = false }: DevMasco
             initial={{ opacity: 0, y: 10, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            className={`mb-3 max-w-[240px] rounded-2xl px-4 py-2 text-xs font-semibold shadow-xl border ${
+            className={`mb-3 max-w-[220px] rounded-2xl px-4 py-2 text-xs font-semibold shadow-xl border pointer-events-none ${
               darkMode
                 ? "bg-slate-900/95 border-white/10 text-pink-200"
                 : "bg-white/95 border-black/10 text-pink-700"
@@ -49,23 +103,20 @@ export default function DevMascot({ darkMode, reducedEffects = false }: DevMasco
       <motion.button
         type="button"
         onClick={onClick}
-        drag
-        dragConstraints={{ top: -120, left: -40, right: 40, bottom: 20 }}
-        whileDrag={{ scale: 1.06 }}
+        whileHover={{ scale: 1.06, rotate: -4 }}
         whileTap={{ scale: 0.94 }}
-        animate={reducedEffects ? undefined : { y: [0, -6, 0] }}
-        transition={reducedEffects ? undefined : { duration: 2.4, repeat: Number.POSITIVE_INFINITY }}
-        className={`relative h-14 w-14 rounded-full border shadow-lg ${
-          darkMode
-            ? "bg-gradient-to-br from-pink-500/90 to-purple-600/90 border-white/20"
-            : "bg-gradient-to-br from-pink-400 to-purple-500 border-white/60"
-        }`}
-        aria-label="Interactive mascot"
+        className="relative h-[4.25rem] w-[4.25rem] pointer-events-auto"
+        aria-label="Anime companion"
       >
-        <span className="absolute inset-0 m-auto block h-2 w-2 rounded-full bg-white/90 top-4 left-4" />
-        <span className="absolute inset-0 m-auto block h-2 w-2 rounded-full bg-white/90 top-4 right-4" />
-        <span className="absolute left-1/2 -translate-x-1/2 bottom-4 h-1.5 w-6 rounded-full bg-white/90" />
+        <Image
+          src="/girl.png"
+          alt="Cute anime girl companion"
+          fill
+          sizes="68px"
+          className="object-contain drop-shadow-[0_10px_16px_rgba(0,0,0,0.35)]"
+          priority={false}
+        />
       </motion.button>
-    </div>
+    </motion.div>
   )
 }
