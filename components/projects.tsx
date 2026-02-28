@@ -1,7 +1,7 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { motion, useInView, useMotionTemplate, useMotionValue, useSpring, useTransform, type Variants } from "framer-motion"
+import { useRef, type MouseEvent } from "react"
 import { ExternalLink, Github, Zap, Brain, Code, ArrowUpRight } from "lucide-react"
 import { IconWrapper } from "./ui/icon-wrapper"
 
@@ -95,6 +95,129 @@ const projects: ProjectItem[] = [
   },
 ]
 
+function ProjectCard({
+  project,
+  darkMode,
+  variants,
+}: {
+  project: ProjectItem
+  darkMode: boolean
+  variants: Variants
+}) {
+  const pointerX = useMotionValue(50)
+  const pointerY = useMotionValue(50)
+  const rotateX = useSpring(useTransform(pointerY, [0, 100], [8, -8]), {
+    stiffness: 180,
+    damping: 20,
+    mass: 0.6,
+  })
+  const rotateY = useSpring(useTransform(pointerX, [0, 100], [-8, 8]), {
+    stiffness: 180,
+    damping: 20,
+    mass: 0.6,
+  })
+
+  const spotlight = useMotionTemplate`radial-gradient(300px circle at ${pointerX}% ${pointerY}%, ${
+    darkMode ? "rgba(236, 72, 153, 0.2)" : "rgba(219, 39, 119, 0.13)"
+  }, transparent 70%)`
+
+  const onMouseMove = (event: MouseEvent<HTMLDivElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - rect.left) / rect.width) * 100
+    const y = ((event.clientY - rect.top) / rect.height) * 100
+    pointerX.set(x)
+    pointerY.set(y)
+  }
+
+  const onMouseLeave = () => {
+    pointerX.set(50)
+    pointerY.set(50)
+  }
+
+  return (
+    <motion.div
+      key={project.id}
+      variants={variants}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      whileHover={{ y: -8, scale: 1.01 }}
+      transition={{ type: "spring", stiffness: 220, damping: 20 }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      className={`group relative rounded-[2.5rem] p-1 overflow-hidden transition-all duration-500 will-change-transform ${
+        darkMode ? "hover:shadow-[0_0_40px_rgba(236,72,153,0.15)]" : "hover:shadow-[0_0_40px_rgba(236,72,153,0.08)]"
+      }`}
+    >
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20 group-hover:opacity-35 transition-opacity duration-700`}
+      />
+      <motion.div className="absolute inset-1 rounded-[2.3rem] pointer-events-none" style={{ background: spotlight }} />
+
+      <div
+        className={`relative w-full h-full rounded-[2.4rem] p-8 md:p-10 backdrop-blur-2xl border transition-all duration-500 ${
+          darkMode
+            ? "bg-slate-900/80 border-white/5 group-hover:bg-slate-900/40"
+            : "bg-white/90 border-black/5 group-hover:bg-white/70 shadow-2xl shadow-black/5"
+        }`}
+      >
+        <div className="flex justify-between items-start mb-8">
+          <IconWrapper icon={project.icon} gradient={`bg-gradient-to-r ${project.gradient}`} darkMode={darkMode} />
+          <div className="flex gap-3">
+            <motion.a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -3, rotate: -6, scale: 1.08 }}
+              className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
+              aria-label={`${project.title} GitHub repository`}
+            >
+              <Github className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+            </motion.a>
+            {project.demo && (
+              <motion.a
+                href={project.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -3, rotate: 6, scale: 1.08 }}
+                className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
+                aria-label={`${project.title} live demo`}
+              >
+                <ExternalLink className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+              </motion.a>
+            )}
+          </div>
+        </div>
+
+        <h3 className={`text-3xl font-black mb-4 ${darkMode ? "text-white" : "text-gray-900"} tracking-tight`}>{project.title}</h3>
+
+        <p className={`text-lg leading-relaxed mb-8 ${darkMode ? "text-gray-400" : "text-gray-600"} font-light`}>
+          {project.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2 mt-auto">
+          {project.tech.map((tech) => (
+            <motion.span
+              key={tech}
+              whileHover={{ y: -2, scale: 1.04 }}
+              className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border ${
+                darkMode ? "bg-white/5 border-white/10 text-gray-400" : "bg-black/5 border-black/5 text-gray-500"
+              }`}
+            >
+              {tech}
+            </motion.span>
+          ))}
+        </div>
+
+        <motion.div
+          whileHover={{ x: 2, y: -2, rotate: -8 }}
+          className="absolute bottom-10 right-10 opacity-0 group-hover:opacity-40 transition-opacity translate-x-4 group-hover:translate-x-0 duration-500"
+        >
+          <ArrowUpRight className={`w-10 h-10 ${darkMode ? "text-white" : "text-gray-900"}`} />
+        </motion.div>
+      </div>
+    </motion.div>
+  )
+}
+
 export default function Projects({ darkMode }: ProjectsProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
@@ -110,12 +233,12 @@ export default function Projects({ darkMode }: ProjectsProps) {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+      transition: { duration: 0.8, ease: "easeOut" },
     },
   }
 
@@ -152,84 +275,7 @@ export default function Projects({ darkMode }: ProjectsProps) {
           className="grid md:grid-cols-2 gap-10"
         >
           {projects.map((project) => (
-            <motion.div
-              key={project.id}
-              variants={itemVariants}
-              className={`group relative rounded-[2.5rem] p-1 overflow-hidden transition-all duration-500 ${
-                darkMode ? "hover:shadow-[0_0_40px_rgba(236,72,153,0.1)]" : "hover:shadow-[0_0_40px_rgba(236,72,153,0.05)]"
-              }`}
-            >
-              {/* Card Background with Animated Border Effect */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-20 transition-opacity duration-700`} />
-              
-              <div
-                className={`relative w-full h-full rounded-[2.4rem] p-8 md:p-10 backdrop-blur-2xl border transition-all duration-500 ${
-                  darkMode 
-                    ? "bg-slate-900/80 border-white/5 group-hover:bg-slate-900/40" 
-                    : "bg-white/90 border-black/5 group-hover:bg-white/70 shadow-2xl shadow-black/5"
-                }`}
-              >
-                <div className="flex justify-between items-start mb-8">
-                  <IconWrapper 
-                    icon={project.icon} 
-                    gradient={`bg-gradient-to-r ${project.gradient}`} 
-                    darkMode={darkMode} 
-                  />
-                  <div className="flex gap-3">
-                    <motion.a 
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ y: -3 }}
-                      className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
-                      aria-label={`${project.title} GitHub repository`}
-                    >
-                      <Github className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
-                    </motion.a>
-                    {project.demo && (
-                      <motion.a 
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ y: -3 }}
-                        className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
-                        aria-label={`${project.title} live demo`}
-                      >
-                        <ExternalLink className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
-                      </motion.a>
-                    )}
-                  </div>
-                </div>
-
-                <h3 className={`text-3xl font-black mb-4 ${darkMode ? "text-white" : "text-gray-900"} tracking-tight`}>
-                  {project.title}
-                </h3>
-
-                <p className={`text-lg leading-relaxed mb-8 ${darkMode ? "text-gray-400" : "text-gray-600"} font-light`}>
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mt-auto">
-                  {project.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border ${
-                        darkMode 
-                          ? "bg-white/5 border-white/10 text-gray-400" 
-                          : "bg-black/5 border-black/5 text-gray-500"
-                      }`}
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Decorative Element */}
-                <div className="absolute bottom-10 right-10 opacity-0 group-hover:opacity-40 transition-opacity translate-x-4 group-hover:translate-x-0 duration-500">
-                   <ArrowUpRight className={`w-10 h-10 ${darkMode ? "text-white" : "text-gray-900"}`} />
-                </div>
-              </div>
-            </motion.div>
+            <ProjectCard key={project.id} project={project} darkMode={darkMode} variants={itemVariants} />
           ))}
         </motion.div>
       </div>
