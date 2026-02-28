@@ -11,16 +11,35 @@ import Navigation from "@/components/navigation"
 import ThemeToggle from "@/components/theme-toggle"
 import ParticleBackground from "@/components/particle-background"
 import CustomCursor from "@/components/custom-cursor"
+import CommandDeck from "@/components/command-deck"
+import DevMascot from "@/components/dev-mascot"
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [reducedEffects, setReducedEffects] = useState(false)
+  const [partyMode, setPartyMode] = useState(false)
 
   useEffect(() => {
     setMounted(true)
     const savedTheme = localStorage.getItem("theme")
     if (savedTheme === "dark") {
       setDarkMode(true)
+    }
+
+    const coarsePointer = window.matchMedia("(pointer: coarse)")
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const updateEffects = () => {
+      setReducedEffects(coarsePointer.matches || reducedMotion.matches)
+    }
+
+    updateEffects()
+    coarsePointer.addEventListener("change", updateEffects)
+    reducedMotion.addEventListener("change", updateEffects)
+
+    return () => {
+      coarsePointer.removeEventListener("change", updateEffects)
+      reducedMotion.removeEventListener("change", updateEffects)
     }
   }, [])
 
@@ -35,6 +54,12 @@ export default function Home() {
     return null
   }
 
+  const triggerPartyMode = () => {
+    if (reducedEffects) return
+    setPartyMode(true)
+    window.setTimeout(() => setPartyMode(false), 2200)
+  }
+
   return (
     <div
       className={`min-h-screen transition-colors duration-500 relative ${
@@ -43,10 +68,10 @@ export default function Home() {
           : "bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50"
       }`}
     >
-      <CustomCursor darkMode={darkMode} />
+      {!reducedEffects && <CustomCursor darkMode={darkMode} />}
       
       {/* Decorative Glows */}
-      {darkMode && (
+      {darkMode && !reducedEffects && (
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
           <motion.div 
             className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-pink-500/10 blur-[120px] rounded-full"
@@ -75,9 +100,37 @@ export default function Home() {
         </div>
       )}
 
-      <ParticleBackground darkMode={darkMode} />
+      <ParticleBackground darkMode={darkMode} reducedEffects={reducedEffects} />
       <Navigation darkMode={darkMode} />
       <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
+      <CommandDeck darkMode={darkMode} setDarkMode={setDarkMode} onSurprise={triggerPartyMode} />
+      <DevMascot darkMode={darkMode} />
+
+      {partyMode && (
+        <div className="fixed inset-0 pointer-events-none z-[65]">
+          {Array.from({ length: 22 }).map((_, index) => (
+            <motion.span
+              key={index}
+              className="absolute h-2.5 w-2.5 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: "-10px",
+                background:
+                  index % 2 === 0
+                    ? "linear-gradient(120deg, #ec4899, #a855f7)"
+                    : "linear-gradient(120deg, #3b82f6, #22d3ee)",
+              }}
+              initial={{ y: -10, opacity: 0, rotate: 0 }}
+              animate={{ y: "110vh", opacity: [0, 1, 0.9, 0], rotate: 360 }}
+              transition={{
+                duration: 1.8 + Math.random() * 0.8,
+                ease: "easeOut",
+                delay: Math.random() * 0.25,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         <motion.main

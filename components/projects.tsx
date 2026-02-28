@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { ExternalLink, Github, Zap, Brain, Code, ArrowUpRight } from "lucide-react"
 import { IconWrapper } from "./ui/icon-wrapper"
 
@@ -9,7 +9,18 @@ interface ProjectsProps {
   darkMode: boolean
 }
 
-const projects = [
+interface ProjectItem {
+  id: number
+  title: string
+  description: string
+  tech: string[]
+  github: string
+  demo: string | null
+  icon: typeof Brain
+  gradient: string
+}
+
+const projects: ProjectItem[] = [
   {
     id: 1,
     title: "Documentation Hub",
@@ -49,6 +60,38 @@ const projects = [
     demo: "https://bimbok-portfolio.vercel.app/",
     icon: Code,
     gradient: "from-purple-500 to-indigo-500",
+  },
+  {
+    id: 5,
+    title: "AlgoScope",
+    description: "Interactive algorithm visualizer for sorting and searching concepts with step-by-step animations for learners and developers.",
+    tech: ["React", "Tailwind CSS", "D3.js"],
+    github: "https://github.com/orion-kernel/AlgoScope.git",
+    demo: "https://algo-scope-virid.vercel.app/",
+    icon: Brain,
+    gradient: "from-cyan-500 to-blue-500",
+  },
+  {
+    id: 6,
+    title: "bimagic",
+    description:
+      "Bash-based Git workflow automation tool with an interactive menu for commit, branch, remote, and GitHub PAT-driven operations.",
+    tech: ["Bash", "Git", "GitHub CLI"],
+    github: "https://github.com/orion-kernel/bimagic.git",
+    demo: null,
+    icon: Zap,
+    gradient: "from-amber-500 to-orange-500",
+  },
+  {
+    id: 7,
+    title: "fyzenor",
+    description:
+      "Lightweight terminal file manager built in modern C++17 with fast navigation and asynchronous media preview support.",
+    tech: ["C++17", "Terminal UI"],
+    github: "https://github.com/Bimbok/fyzenor.git",
+    demo: null,
+    icon: Code,
+    gradient: "from-emerald-500 to-teal-500",
   },
 ]
 
@@ -135,18 +178,26 @@ export default function Projects({ darkMode }: ProjectsProps) {
                   <div className="flex gap-3">
                     <motion.a 
                       href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       whileHover={{ y: -3 }}
                       className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
+                      aria-label={`${project.title} GitHub repository`}
                     >
                       <Github className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
                     </motion.a>
-                    <motion.a 
-                      href={project.demo}
-                      whileHover={{ y: -3 }}
-                      className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
-                    >
-                      <ExternalLink className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
-                    </motion.a>
+                    {project.demo && (
+                      <motion.a 
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ y: -3 }}
+                        className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
+                        aria-label={`${project.title} live demo`}
+                      >
+                        <ExternalLink className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+                      </motion.a>
+                    )}
                   </div>
                 </div>
 

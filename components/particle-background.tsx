@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 
 interface ParticleBackgroundProps {
   darkMode: boolean
+  reducedEffects?: boolean
 }
 
 interface Particle {
@@ -17,17 +18,19 @@ interface Particle {
   delay: number
 }
 
-export default function ParticleBackground({ darkMode }: ParticleBackgroundProps) {
+export default function ParticleBackground({ darkMode, reducedEffects = false }: ParticleBackgroundProps) {
   const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
     const generateParticles = () => {
       const newParticles: Particle[] = []
+      const isMobile = window.matchMedia("(pointer: coarse)").matches
+      const particleCount = reducedEffects ? 0 : isMobile ? 16 : 50
       const colors = darkMode
         ? ["#ec4899", "#a855f7", "#3b82f6", "#06b6d4"]
         : ["#f472b6", "#c084fc", "#60a5fa", "#34d399"]
 
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < particleCount; i++) {
         newParticles.push({
           id: i,
           x: Math.random() * 100,
@@ -42,7 +45,7 @@ export default function ParticleBackground({ darkMode }: ParticleBackgroundProps
     }
 
     generateParticles()
-  }, [darkMode])
+  }, [darkMode, reducedEffects])
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -58,14 +61,14 @@ export default function ParticleBackground({ darkMode }: ParticleBackgroundProps
             backgroundColor: particle.color,
           }}
           animate={{
-            y: [0, -30, 0],
-            x: [0, Math.random() * 20 - 10, 0],
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.8, 0.3],
+            y: reducedEffects ? 0 : [0, -30, 0],
+            x: reducedEffects ? 0 : [0, Math.random() * 20 - 10, 0],
+            scale: reducedEffects ? 1 : [1, 1.2, 1],
+            opacity: reducedEffects ? 0.2 : [0.3, 0.8, 0.3],
           }}
           transition={{
             duration: particle.duration,
-            repeat: Number.POSITIVE_INFINITY,
+            repeat: reducedEffects ? 0 : Number.POSITIVE_INFINITY,
             delay: particle.delay,
             ease: "easeInOut",
           }}

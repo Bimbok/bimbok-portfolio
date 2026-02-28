@@ -4,24 +4,53 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
+const siteUrl = "https://bimbok-portfolio.vercel.app"
 
 export const metadata: Metadata = {
-  title: "Bimbok - Full Stack Developer & Digital Creator",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Bimbok | Full Stack Developer",
+    template: "%s | Bimbok Portfolio",
+  },
   description:
-    "Portfolio of Bimbok Bratik Mukherjee- B.Tech IT student, Full Stack Developer specializing in MERN stack, Python, and creating accessible digital solutions.",
+    "Portfolio of Bratik Mukherjee (Bimbok), a full stack developer focused on MERN, Python, and accessible digital products.",
   keywords:
-    "Bimbok, Bratik, Bratik Mukherjee, Full Stack Developer, React, Node.js, Python, MERN Stack, Web Development, Portfolio",
+    "Bimbok, Bratik Mukherjee, full stack developer, MERN, Next.js, React, Node.js, Python, portfolio",
   authors: [{ name: "Bimbok" }],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Bimbok - Full Stack Developer & Digital Creator",
+    title: "Bimbok | Full Stack Developer",
     description:
-      "Building digital solutions that make technology accessible to everyone",
+      "Building polished, accessible web experiences with modern JavaScript and TypeScript stacks.",
+    url: siteUrl,
+    siteName: "Bimbok Portfolio",
     type: "website",
+    images: [
+      {
+        url: "/placeholder-logo.png",
+        width: 512,
+        height: 512,
+        alt: "Bimbok Portfolio Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bimbok | Full Stack Developer",
+    description:
+      "Building polished, accessible web experiences with modern JavaScript and TypeScript stacks.",
+    images: ["/placeholder-logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   icons: {
     icon: "/favicon.ico",
   },
-  generator: "bimbok",
+  generator: "next.js",
 };
 
 export default function RootLayout({
