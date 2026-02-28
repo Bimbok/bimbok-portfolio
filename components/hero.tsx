@@ -174,10 +174,12 @@ export default function Hero({ darkMode, reducedEffects = false }: HeroProps) {
         animate={reducedEffects ? undefined : { y: [0, 10, 0] }}
         transition={reducedEffects ? undefined : { duration: 2, repeat: Infinity }}
       >
-        <span className={`text-[10px] font-bold tracking-[0.3em] uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+        <span className={`text-[10px] font-bold tracking-[0.3em] uppercase text-center whitespace-nowrap ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
           Scroll Down
         </span>
-        <div className={`w-[1px] h-12 bg-gradient-to-b ${darkMode ? "from-pink-500 to-transparent" : "from-pink-400 to-transparent"}`} />
+        <div className="w-full flex justify-center">
+          <div className={`w-[1px] h-12 bg-gradient-to-b ${darkMode ? "from-pink-500 to-transparent" : "from-pink-400 to-transparent"}`} />
+        </div>
       </motion.div>
     </section>
   )

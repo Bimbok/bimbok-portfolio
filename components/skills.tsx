@@ -55,7 +55,7 @@ export default function Skills({ darkMode }: SkillsProps) {
           className="text-center mb-20"
         >
           <h2
-            className={`text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r ${
+            className={`text-5xl md:text-6xl font-black leading-[1.12] pb-2 mb-6 bg-gradient-to-r ${
               darkMode ? "from-pink-400 via-purple-400 to-blue-400" : "from-pink-600 via-purple-600 to-blue-600"
             } bg-clip-text text-transparent`}
           >

@@ -56,7 +56,7 @@ export default function Contact({ darkMode }: ContactProps) {
   }
 
   return (
-    <section id="contact" className="py-24 px-4 relative overflow-hidden" ref={ref}>
+    <section id="contact" className="py-20 md:py-24 px-4 relative overflow-hidden" ref={ref}>
       <div className="max-w-6xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -74,7 +74,7 @@ export default function Contact({ darkMode }: ContactProps) {
           </motion.div>
 
           <h2
-            className={`text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r ${
+            className={`text-5xl md:text-7xl font-black leading-[1.12] pb-2 mb-6 bg-gradient-to-r ${
               darkMode ? "from-pink-400 via-purple-400 to-blue-400" : "from-pink-600 via-purple-600 to-blue-600"
             } bg-clip-text text-transparent`}
           >
@@ -90,7 +90,7 @@ export default function Contact({ darkMode }: ContactProps) {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-5 gap-10">
+        <div className="grid lg:grid-cols-5 gap-6 md:gap-10">
           {/* Contact Form */}
           <motion.div 
             variants={containerVariants} 
@@ -100,14 +100,14 @@ export default function Contact({ darkMode }: ContactProps) {
           >
             <motion.div
               variants={itemVariants}
-              className={`p-10 rounded-[3rem] backdrop-blur-2xl border ${
+              className={`p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] backdrop-blur-2xl border ${
                 darkMode ? "bg-white/5 border-white/10" : "bg-white border-black/5 shadow-2xl"
               } relative overflow-hidden`}
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/5 blur-[100px] rounded-full pointer-events-none" />
 
               <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                   <motion.div variants={itemVariants}>
                     <label className={`block text-xs font-black tracking-[0.2em] uppercase mb-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                       Your Name
@@ -118,7 +118,7 @@ export default function Contact({ darkMode }: ContactProps) {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className={`w-full px-6 py-4 rounded-2xl border transition-all duration-500 font-medium ${
+                      className={`w-full px-4 md:px-6 py-3.5 md:py-4 rounded-2xl border transition-all duration-500 font-medium ${
                         darkMode
                           ? "bg-white/5 border-white/10 text-white placeholder-gray-600 focus:border-pink-500/50"
                           : "bg-gray-50 border-gray-100 text-gray-800 placeholder-gray-400 focus:border-pink-500/30 shadow-inner"
@@ -137,7 +137,7 @@ export default function Contact({ darkMode }: ContactProps) {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className={`w-full px-6 py-4 rounded-2xl border transition-all duration-500 font-medium ${
+                      className={`w-full px-4 md:px-6 py-3.5 md:py-4 rounded-2xl border transition-all duration-500 font-medium ${
                         darkMode
                           ? "bg-white/5 border-white/10 text-white placeholder-gray-600 focus:border-pink-500/50"
                           : "bg-gray-50 border-gray-100 text-gray-800 placeholder-gray-400 focus:border-pink-500/30 shadow-inner"
@@ -157,7 +157,7 @@ export default function Contact({ darkMode }: ContactProps) {
                     onChange={handleChange}
                     required
                     rows={4}
-                    className={`w-full px-6 py-4 rounded-2xl border transition-all duration-500 font-medium resize-none ${
+                    className={`w-full px-4 md:px-6 py-3.5 md:py-4 rounded-2xl border transition-all duration-500 font-medium resize-none ${
                       darkMode
                         ? "bg-white/5 border-white/10 text-white placeholder-gray-600 focus:border-pink-500/50"
                         : "bg-gray-50 border-gray-100 text-gray-800 placeholder-gray-400 focus:border-pink-500/30 shadow-inner"
@@ -171,7 +171,7 @@ export default function Contact({ darkMode }: ContactProps) {
                   type="submit"
                   whileHover={{ scale: 1.02, x: 5 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative w-full px-8 py-5 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-black tracking-widest uppercase rounded-2xl shadow-xl hover:shadow-pink-500/20 transition-all duration-500 flex items-center justify-center gap-3"
+                  className="group relative w-full px-6 md:px-8 py-4.5 md:py-5 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-black tracking-widest uppercase rounded-2xl shadow-xl hover:shadow-pink-500/20 transition-all duration-500 flex items-center justify-center gap-3 text-sm md:text-base"
                 >
                   <span className="relative z-10">Launch Message</span>
                   <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
@@ -189,33 +189,33 @@ export default function Contact({ darkMode }: ContactProps) {
           >
             <motion.div
               variants={itemVariants}
-              className={`p-8 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-500 ${
+              className={`p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] backdrop-blur-xl border transition-all duration-500 ${
                 darkMode ? "bg-white/5 border-white/10" : "bg-white/80 border-black/5 shadow-xl"
               } flex items-center gap-6 group`}
             >
               <IconWrapper icon={Mail} gradient="from-pink-500 to-purple-500" darkMode={darkMode} />
               <div>
                 <h4 className={`text-xs font-black tracking-[0.2em] uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Email</h4>
-                <p className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>bimbokmkj@gmail.com</p>
+                <p className={`text-base md:text-lg font-bold leading-tight break-all ${darkMode ? "text-white" : "text-gray-800"}`}>bimbokmkj@gmail.com</p>
               </div>
             </motion.div>
 
             <motion.div
               variants={itemVariants}
-              className={`p-8 rounded-[2.5rem] backdrop-blur-xl border transition-all duration-500 ${
+              className={`p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] backdrop-blur-xl border transition-all duration-500 ${
                 darkMode ? "bg-white/5 border-white/10" : "bg-white/80 border-black/5 shadow-xl"
               } flex items-center gap-6 group`}
             >
               <IconWrapper icon={MapPin} gradient="from-blue-500 to-cyan-500" darkMode={darkMode} />
               <div>
                 <h4 className={`text-xs font-black tracking-[0.2em] uppercase ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Location</h4>
-                <p className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>Kolkata, WB, India</p>
+                <p className={`text-base md:text-lg font-bold leading-tight ${darkMode ? "text-white" : "text-gray-800"}`}>Kolkata, WB, India</p>
               </div>
             </motion.div>
 
             <motion.div
               variants={itemVariants}
-              className={`p-10 rounded-[3rem] backdrop-blur-xl border ${
+              className={`p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] backdrop-blur-xl border ${
                 darkMode ? "bg-white/5 border-white/10" : "bg-white border-black/5 shadow-xl"
               }`}
             >

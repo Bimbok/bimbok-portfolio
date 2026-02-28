@@ -56,7 +56,7 @@ export default function About({ darkMode }: AboutProps) {
 
           <motion.h2
             variants={itemVariants}
-            className={`text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r ${
+            className={`text-5xl md:text-7xl font-bold leading-[1.12] pb-2 mb-6 bg-gradient-to-r ${
               darkMode ? "from-white via-pink-400 to-purple-400" : "from-gray-900 via-pink-600 to-purple-600"
             } bg-clip-text text-transparent`}
           >
