@@ -187,48 +187,52 @@ export default function Navigation({ darkMode }: NavigationProps) {
         onPlay={() => setIsPlaying(true)}
       />
 
-      {isPlaying && (
-        <div
-          className={`fixed top-24 right-4 md:right-6 z-[55] h-28 w-28 rounded-full border backdrop-blur-xl shadow-2xl ${
-            darkMode ? "bg-black/45 border-white/15" : "bg-white/70 border-black/10"
-          }`}
-        >
-          <svg viewBox="0 0 128 128" className="absolute inset-0">
-            <defs>
-              <linearGradient id="vizGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ec4899" />
-                <stop offset="52%" stopColor="#a855f7" />
-                <stop offset="100%" stopColor="#22d3ee" />
-              </linearGradient>
-              <filter id="vizGlow" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="2.2" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
+      <AnimatePresence>
+        {isPlaying && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.78, y: 12, filter: "blur(8px)" }}
+            animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, scale: 0.82, y: 10, filter: "blur(8px)" }}
+            transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-24 right-4 md:right-6 z-[55] h-28 w-28 rounded-full pointer-events-none"
+          >
+            <svg viewBox="0 0 128 128" className="absolute inset-0">
+              <defs>
+                <linearGradient id="vizGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ec4899" />
+                  <stop offset="52%" stopColor="#a855f7" />
+                  <stop offset="100%" stopColor="#22d3ee" />
+                </linearGradient>
+                <filter id="vizGlow" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="2.2" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
 
-            {[0, 0.12, 0.24, 0.36, 0.48, 0.6].map((offset, index) => (
-              <path
-                key={index}
-                d={buildWavePath(
-                  Math.min(1, visualizerEnergy * 1.25 + offset * 0.55),
-                  index * 0.55 + visualizerEnergy * 6.2,
-                )}
-                fill="none"
-                stroke="url(#vizGradient)"
-                strokeWidth={index === 0 ? 2.8 : 1.4}
-                strokeOpacity={index === 0 ? 0.95 : 0.42}
-                filter={index < 2 ? "url(#vizGlow)" : undefined}
-              />
-            ))}
+              {[0, 0.12, 0.24, 0.36, 0.48, 0.6].map((offset, index) => (
+                <path
+                  key={index}
+                  d={buildWavePath(
+                    Math.min(1, visualizerEnergy * 1.25 + offset * 0.55),
+                    index * 0.55 + visualizerEnergy * 6.2,
+                  )}
+                  fill="none"
+                  stroke="url(#vizGradient)"
+                  strokeWidth={index === 0 ? 2.8 : 1.4}
+                  strokeOpacity={index === 0 ? 0.95 : 0.42}
+                  filter={index < 2 ? "url(#vizGlow)" : undefined}
+                />
+              ))}
 
-            <circle cx="64" cy="64" r="36" fill="rgba(2,6,23,0.88)" />
-            <circle cx="64" cy="64" r="34" fill="none" stroke="url(#vizGradient)" strokeWidth="2.3" />
-          </svg>
-        </div>
-      )}
+              <circle cx="64" cy="64" r="36" fill="none" />
+              <circle cx="64" cy="64" r="34" fill="none" stroke="url(#vizGradient)" strokeWidth="2.3" />
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Floating Navigation */}
       <div className="fixed top-6 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none">
