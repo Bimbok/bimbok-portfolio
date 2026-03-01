@@ -76,6 +76,7 @@ export default function Navigation({ darkMode }: NavigationProps) {
   return (
     <>
       <audio
+        id="brand-song"
         ref={audioRef}
         src="/Suzume_No_Tojimari.mp3"
         loop

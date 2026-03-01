@@ -144,7 +144,7 @@ export default function CommandDeck({
     "Core: help, clear, history, !!",
     "Linux-like: ls [path], cd <path>, pwd, cat <file>, grep <query> <file|*>",
     "Portfolio: open <github|linkedin|youtube|resume|project <name>|section>",
-    "Modes: theme [light|dark|toggle], social, surprise",
+    "Modes: theme [light|dark|toggle], music [play|pause|toggle], social, surprise",
     "Quick jump: home/about/skills/projects/contact",
   ];
 
@@ -218,6 +218,42 @@ export default function CommandDeck({
     addLog(`open: unknown target '${alias}'`);
   };
 
+  const controlMusic = async (mode: string) => {
+    const audio = document.getElementById("brand-song") as HTMLAudioElement | null;
+    if (!audio) {
+      addLog("music: audio source not found");
+      return;
+    }
+
+    if (mode === "pause") {
+      audio.pause();
+      addLog("music paused");
+      return;
+    }
+
+    if (mode === "play") {
+      try {
+        await audio.play();
+        addLog("music playing");
+      } catch {
+        addLog("music: autoplay blocked, click BIMBOK once");
+      }
+      return;
+    }
+
+    if (audio.paused) {
+      try {
+        await audio.play();
+        addLog("music playing");
+      } catch {
+        addLog("music: autoplay blocked, click BIMBOK once");
+      }
+    } else {
+      audio.pause();
+      addLog("music paused");
+    }
+  };
+
   const runCommand = (raw: string) => {
     const command = raw.trim();
     if (!command) return;
@@ -259,6 +295,7 @@ export default function CommandDeck({
         open: "open <target> -> open link/section/project",
         history: "history -> show command history",
         theme: "theme [light|dark|toggle] -> switch theme",
+        music: "music [play|pause|toggle] -> control navbar song",
       };
       addLog(pages[topic] ?? `No manual entry for ${topic}`);
       return;
@@ -284,6 +321,16 @@ export default function CommandDeck({
       addLog("github.com/Bimbok");
       addLog("linkedin.com/in/bratik-mukherjee-1067462a6");
       addLog("youtube.com/@hellohellothisibimbok");
+      return;
+    }
+
+    if (name === "music") {
+      const mode = args[0] ?? "toggle";
+      if (!["play", "pause", "toggle"].includes(mode)) {
+        addLog("music: usage -> music [play|pause|toggle]");
+        return;
+      }
+      void controlMusic(mode);
       return;
     }
 
