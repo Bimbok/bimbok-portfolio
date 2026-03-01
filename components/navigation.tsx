@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Menu, X } from "lucide-react"
 
 interface NavigationProps {
@@ -20,6 +20,8 @@ export default function Navigation({ darkMode }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("hero")
   const [scrolled, setScrolled] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,8 +55,35 @@ export default function Navigation({ darkMode }: NavigationProps) {
     setIsOpen(false)
   }
 
+  const toggleBrandSong = async () => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    if (isPlaying) {
+      audio.pause()
+      setIsPlaying(false)
+      return
+    }
+
+    try {
+      await audio.play()
+      setIsPlaying(true)
+    } catch {
+      setIsPlaying(false)
+    }
+  }
+
   return (
     <>
+      <audio
+        ref={audioRef}
+        src="/Suzume_No_Tojimari.mp3"
+        loop
+        preload="metadata"
+        onPause={() => setIsPlaying(false)}
+        onPlay={() => setIsPlaying(true)}
+      />
+
       {/* Floating Navigation */}
       <div className="fixed top-6 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none">
         <motion.nav
@@ -73,7 +102,10 @@ export default function Navigation({ darkMode }: NavigationProps) {
               className={`text-xl font-black bg-gradient-to-r ${
                 darkMode ? "from-pink-400 to-purple-400" : "from-pink-600 to-purple-600"
               } bg-clip-text text-transparent cursor-pointer hidden sm:block mr-4`}
-              onClick={() => scrollToSection("#hero")}
+              onClick={() => {
+                scrollToSection("#hero")
+                void toggleBrandSong()
+              }}
             >
               BIMBOK
             </motion.div>
