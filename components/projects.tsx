@@ -1,8 +1,8 @@
 "use client"
 
 import { motion, useInView, useMotionTemplate, useMotionValue, useSpring, useTransform, type Variants } from "framer-motion"
-import { useRef, type MouseEvent } from "react"
-import { ExternalLink, Github, Zap, Brain, Code, ArrowUpRight } from "lucide-react"
+import { useRef, useState, type MouseEvent } from "react"
+import { ExternalLink, Github, Zap, Brain, Code, ArrowUpRight, RefreshCw } from "lucide-react"
 import { IconWrapper } from "./ui/icon-wrapper"
 
 interface ProjectsProps {
@@ -13,6 +13,9 @@ interface ProjectItem {
   id: number
   title: string
   description: string
+  architecture: string
+  challenge: string
+  impact: string
   tech: string[]
   github: string
   demo: string | null
@@ -25,6 +28,9 @@ const projects: ProjectItem[] = [
     id: 1,
     title: "Documentation Hub",
     description: "A very vast code storage app, with proper highlighting, brief description.",
+    architecture: "MERN architecture with modular API routes and structured document models for scalable snippets.",
+    challenge: "Maintaining readable syntax blocks with metadata while keeping retrieval fast for large collections.",
+    impact: "Improved code lookup and reuse workflow through centralized snippet organization.",
     tech: ["MongoDB", "Mongoose", "Express.js", "Node.js"],
     github: "https://github.com/Bimbok/documentationHub",
     demo: "https://bimbokdocs.vercel.app/",
@@ -35,6 +41,9 @@ const projects: ProjectItem[] = [
     id: 2,
     title: "Weather - Weathea",
     description: "A beautiful and feature-rich weather application. Built for simplicity.",
+    architecture: "API-driven weather client with isolated data adapters and responsive UI components.",
+    challenge: "Handling location-based fetches and weather-state transitions cleanly across devices.",
+    impact: "Delivered a quick and intuitive weather experience with polished UI interactions.",
     tech: ["MongoDB", "Express.js", "Node.js", "Stripe"],
     github: "https://github.com/Bimbok/weatherApp",
     demo: "https://weathia.vercel.app/",
@@ -45,6 +54,9 @@ const projects: ProjectItem[] = [
     id: 3,
     title: "Real-time Chat Application",
     description: "Multi-room chat application with real-time messaging, file sharing, and user presence.",
+    architecture: "Socket.IO event pipeline with room segmentation and persistent message storage.",
+    challenge: "Keeping room state, presence, and delivery consistency stable in multi-user scenarios.",
+    impact: "Enabled low-latency collaborative chat with practical room-level communication.",
     tech: ["Socket.IO", "Node.js", "Express", "MongoDB", "React"],
     github: "https://github.com/Bimbok/Now-Chat",
     demo: "https://now-chat-4e5c.onrender.com/",
@@ -55,6 +67,9 @@ const projects: ProjectItem[] = [
     id: 4,
     title: "Portfolio Website",
     description: "This anime-inspired portfolio website built with Next.js, featuring smooth animations.",
+    architecture: "Next.js App Router with modular component sections and animation-driven interaction layers.",
+    challenge: "Balancing heavy motion aesthetics with responsiveness and low-end device performance.",
+    impact: "Created a memorable personal brand experience with strong interactivity and polish.",
     tech: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
     github: "https://github.com/Bimbok/bimbok-portfolio",
     demo: "https://bimbok-portfolio.vercel.app/",
@@ -65,6 +80,9 @@ const projects: ProjectItem[] = [
     id: 5,
     title: "AlgoScope",
     description: "Interactive algorithm visualizer for sorting and searching concepts with step-by-step animations for learners and developers.",
+    architecture: "React state engine coordinated with D3 visual layers for deterministic algorithm playback.",
+    challenge: "Synchronizing algorithm steps with fluid animations without desync or visual jitter.",
+    impact: "Made core algorithm concepts easier to understand for students and new developers.",
     tech: ["React", "Tailwind CSS", "D3.js"],
     github: "https://github.com/orion-kernel/AlgoScope.git",
     demo: "https://algo-scope-virid.vercel.app/",
@@ -76,6 +94,9 @@ const projects: ProjectItem[] = [
     title: "bimagic",
     description:
       "Bash-based Git workflow automation tool with an interactive menu for commit, branch, remote, and GitHub PAT-driven operations.",
+    architecture: "Menu-driven Bash command orchestrator wrapping standard Git operations into guided flows.",
+    challenge: "Designing safe defaults for destructive Git actions while keeping the UX fast.",
+    impact: "Reduced command overhead for repetitive Git workflows and improved terminal productivity.",
     tech: ["Bash", "Git", "GitHub CLI"],
     github: "https://github.com/orion-kernel/bimagic.git",
     demo: null,
@@ -87,6 +108,9 @@ const projects: ProjectItem[] = [
     title: "fyzenor",
     description:
       "Lightweight terminal file manager built in modern C++17 with fast navigation and asynchronous media preview support.",
+    architecture: "C++17 core loop with efficient file-indexing and async preview rendering pipeline.",
+    challenge: "Combining terminal speed with responsive media previews and Vim-like controls.",
+    impact: "Delivered a snappy terminal-first file management experience for power users.",
     tech: ["C++17", "Terminal UI"],
     github: "https://github.com/Bimbok/fyzenor.git",
     demo: null,
@@ -104,6 +128,7 @@ function ProjectCard({
   darkMode: boolean
   variants: Variants
 }) {
+  const [flipped, setFlipped] = useState(false)
   const pointerX = useMotionValue(50)
   const pointerY = useMotionValue(50)
   const rotateX = useSpring(useTransform(pointerY, [0, 100], [8, -8]), {
@@ -152,68 +177,134 @@ function ProjectCard({
       />
       <motion.div className="absolute inset-1 rounded-[2.3rem] pointer-events-none" style={{ background: spotlight }} />
 
-      <div
-        className={`relative w-full h-full rounded-[2.4rem] p-8 md:p-10 backdrop-blur-2xl border transition-all duration-500 ${
-          darkMode
-            ? "bg-slate-900/80 border-white/5 group-hover:bg-slate-900/40"
-            : "bg-white/90 border-black/5 group-hover:bg-white/70 shadow-2xl shadow-black/5"
-        }`}
+      <motion.div
+        animate={{ rotateY: flipped ? 180 : 0 }}
+        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        className="relative w-full min-h-[29rem] rounded-[2.4rem] [transform-style:preserve-3d]"
       >
-        <div className="flex justify-between items-start mb-8">
-          <IconWrapper icon={project.icon} gradient={`bg-gradient-to-r ${project.gradient}`} darkMode={darkMode} />
-          <div className="flex gap-3">
-            <motion.a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ y: -3, rotate: -6, scale: 1.08 }}
-              className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
-              aria-label={`${project.title} GitHub repository`}
-            >
-              <Github className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
-            </motion.a>
-            {project.demo && (
+        <div
+          className={`absolute inset-0 rounded-[2.4rem] p-8 md:p-10 backdrop-blur-2xl border transition-all duration-500 backface-hidden ${
+            darkMode
+              ? "bg-slate-900/80 border-white/5 group-hover:bg-slate-900/40"
+              : "bg-white/90 border-black/5 group-hover:bg-white/70 shadow-2xl shadow-black/5"
+          }`}
+        >
+          <div className="flex justify-between items-start mb-8">
+            <IconWrapper icon={project.icon} gradient={`bg-gradient-to-r ${project.gradient}`} darkMode={darkMode} />
+            <div className="flex gap-3">
+              <motion.button
+                type="button"
+                onClick={() => setFlipped(true)}
+                whileHover={{ y: -3, rotate: -4, scale: 1.08 }}
+                className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
+                aria-label={`${project.title} details`}
+              >
+                <RefreshCw className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+              </motion.button>
               <motion.a
-                href={project.demo}
+                href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ y: -3, rotate: 6, scale: 1.08 }}
+                whileHover={{ y: -3, rotate: -6, scale: 1.08 }}
                 className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
-                aria-label={`${project.title} live demo`}
+                aria-label={`${project.title} GitHub repository`}
               >
-                <ExternalLink className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+                <Github className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
               </motion.a>
-            )}
+              {project.demo && (
+                <motion.a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -3, rotate: 6, scale: 1.08 }}
+                  className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
+                  aria-label={`${project.title} live demo`}
+                >
+                  <ExternalLink className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+                </motion.a>
+              )}
+            </div>
+          </div>
+
+          <h3 className={`text-3xl font-black mb-4 ${darkMode ? "text-white" : "text-gray-900"} tracking-tight`}>{project.title}</h3>
+
+          <p className={`text-lg leading-relaxed mb-8 ${darkMode ? "text-gray-400" : "text-gray-600"} font-light`}>
+            {project.description}
+          </p>
+
+          <div className="flex flex-wrap gap-2 mt-auto">
+            {project.tech.map((tech) => (
+              <motion.span
+                key={tech}
+                whileHover={{ y: -2, scale: 1.04 }}
+                className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border ${
+                  darkMode ? "bg-white/5 border-white/10 text-gray-400" : "bg-black/5 border-black/5 text-gray-500"
+                }`}
+              >
+                {tech}
+              </motion.span>
+            ))}
+          </div>
+
+          <motion.div
+            whileHover={{ x: 2, y: -2, rotate: -8 }}
+            className="absolute bottom-10 right-10 opacity-0 group-hover:opacity-40 transition-opacity translate-x-4 group-hover:translate-x-0 duration-500"
+          >
+            <ArrowUpRight className={`w-10 h-10 ${darkMode ? "text-white" : "text-gray-900"}`} />
+          </motion.div>
+        </div>
+
+        <div
+          className={`absolute inset-0 rounded-[2.4rem] p-8 md:p-10 backdrop-blur-2xl border backface-hidden rotate-y-180 ${
+            darkMode ? "bg-slate-900/90 border-white/10" : "bg-white/95 border-black/10 shadow-2xl shadow-black/5"
+          }`}
+        >
+          <div className="flex justify-between items-start mb-6">
+            <p className={`text-xs font-black tracking-[0.2em] uppercase ${darkMode ? "text-pink-300" : "text-pink-600"}`}>
+              Architecture Notes
+            </p>
+            <motion.button
+              type="button"
+              onClick={() => setFlipped(false)}
+              whileHover={{ y: -2, rotate: 8, scale: 1.06 }}
+              className={`p-3 rounded-full border ${darkMode ? "border-white/10 hover:bg-white/10" : "border-black/5 hover:bg-black/5"} transition-colors`}
+              aria-label={`${project.title} front side`}
+            >
+              <RefreshCw className={`w-5 h-5 ${darkMode ? "text-white" : "text-gray-800"}`} />
+            </motion.button>
+          </div>
+
+          <h3 className={`text-2xl font-black mb-5 ${darkMode ? "text-white" : "text-gray-900"} tracking-tight`}>{project.title}</h3>
+
+          <div className="space-y-5">
+            <div>
+              <p className={`text-[11px] mb-1 uppercase tracking-[0.18em] font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Architecture</p>
+              <p className={`${darkMode ? "text-gray-200" : "text-gray-700"} text-sm leading-relaxed`}>{project.architecture}</p>
+            </div>
+            <div>
+              <p className={`text-[11px] mb-1 uppercase tracking-[0.18em] font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Challenge</p>
+              <p className={`${darkMode ? "text-gray-200" : "text-gray-700"} text-sm leading-relaxed`}>{project.challenge}</p>
+            </div>
+            <div>
+              <p className={`text-[11px] mb-1 uppercase tracking-[0.18em] font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Impact</p>
+              <p className={`${darkMode ? "text-gray-200" : "text-gray-700"} text-sm leading-relaxed`}>{project.impact}</p>
+            </div>
+          </div>
+
+          <div className="mt-7 flex flex-wrap gap-2">
+            {project.tech.map((tech) => (
+              <span
+                key={`back-${project.id}-${tech}`}
+                className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase border ${
+                  darkMode ? "bg-white/5 border-white/10 text-gray-300" : "bg-black/5 border-black/10 text-gray-600"
+                }`}
+              >
+                {tech}
+              </span>
+            ))}
           </div>
         </div>
-
-        <h3 className={`text-3xl font-black mb-4 ${darkMode ? "text-white" : "text-gray-900"} tracking-tight`}>{project.title}</h3>
-
-        <p className={`text-lg leading-relaxed mb-8 ${darkMode ? "text-gray-400" : "text-gray-600"} font-light`}>
-          {project.description}
-        </p>
-
-        <div className="flex flex-wrap gap-2 mt-auto">
-          {project.tech.map((tech) => (
-            <motion.span
-              key={tech}
-              whileHover={{ y: -2, scale: 1.04 }}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border ${
-                darkMode ? "bg-white/5 border-white/10 text-gray-400" : "bg-black/5 border-black/5 text-gray-500"
-              }`}
-            >
-              {tech}
-            </motion.span>
-          ))}
-        </div>
-
-        <motion.div
-          whileHover={{ x: 2, y: -2, rotate: -8 }}
-          className="absolute bottom-10 right-10 opacity-0 group-hover:opacity-40 transition-opacity translate-x-4 group-hover:translate-x-0 duration-500"
-        >
-          <ArrowUpRight className={`w-10 h-10 ${darkMode ? "text-white" : "text-gray-900"}`} />
-        </motion.div>
-      </div>
+      </motion.div>
     </motion.div>
   )
 }
