@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { Menu, X } from "lucide-react"
 
 interface NavigationProps {
@@ -21,7 +21,35 @@ export default function Navigation({ darkMode }: NavigationProps) {
   const [activeSection, setActiveSection] = useState("hero")
   const [scrolled, setScrolled] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [visualizerLevels, setVisualizerLevels] = useState<number[]>(Array.from({ length: 12 }, () => 0.3))
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
+  const rafRef = useRef<number | null>(null)
+  const visualizerEnergy = useMemo(
+    () => visualizerLevels.reduce((sum, level) => sum + level, 0) / visualizerLevels.length,
+    [visualizerLevels],
+  )
+
+  const buildWavePath = (amplitude: number, phase: number, lobes = 6) => {
+    const points: string[] = []
+    const cx = 64
+    const cy = 64
+    const baseRadius = 39
+    const maxAmp = 16
+
+    for (let degree = 0; degree <= 360; degree += 6) {
+      const theta = (degree * Math.PI) / 180
+      const wave = Math.sin(theta * lobes + phase) * amplitude * maxAmp
+      const radius = baseRadius + wave
+      const x = cx + Math.cos(theta) * radius
+      const y = cy + Math.sin(theta) * radius
+      points.push(`${degree === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`)
+    }
+
+    return `${points.join(" ")} Z`
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,6 +101,80 @@ export default function Navigation({ darkMode }: NavigationProps) {
     }
   }
 
+  useEffect(() => {
+    const stopVisualizer = () => {
+      if (rafRef.current) {
+        window.cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
+      setVisualizerLevels(Array.from({ length: 12 }, () => 0.3))
+    }
+
+    const startVisualizer = async () => {
+      const audio = audioRef.current
+      if (!audio) return
+
+      const AudioContextCtor =
+        window.AudioContext ||
+        (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+
+      if (!AudioContextCtor) return
+
+      if (!audioContextRef.current) {
+        audioContextRef.current = new AudioContextCtor()
+      }
+
+      if (audioContextRef.current.state === "suspended") {
+        await audioContextRef.current.resume()
+      }
+
+      if (!sourceRef.current) {
+        sourceRef.current = audioContextRef.current.createMediaElementSource(audio)
+      }
+
+      if (!analyserRef.current) {
+        analyserRef.current = audioContextRef.current.createAnalyser()
+        analyserRef.current.fftSize = 256
+        analyserRef.current.smoothingTimeConstant = 0.72
+        sourceRef.current.connect(analyserRef.current)
+        analyserRef.current.connect(audioContextRef.current.destination)
+      }
+
+      const analyser = analyserRef.current
+      const bufferLength = analyser.frequencyBinCount
+      const dataArray = new Uint8Array(bufferLength)
+
+      const tick = () => {
+        analyser.getByteFrequencyData(dataArray)
+        const bins = 12
+        const chunk = Math.floor(bufferLength / bins)
+        const nextLevels = Array.from({ length: bins }, (_, index) => {
+          let sum = 0
+          for (let i = 0; i < chunk; i++) {
+            sum += dataArray[index * chunk + i]
+          }
+          const average = chunk > 0 ? sum / chunk : 0
+          const boosted = Math.pow(average / 255, 0.78) * 1.35
+          return Math.max(0.24, Math.min(1, boosted))
+        })
+        setVisualizerLevels(nextLevels)
+        rafRef.current = window.requestAnimationFrame(tick)
+      }
+
+      tick()
+    }
+
+    if (isPlaying) {
+      void startVisualizer()
+    } else {
+      stopVisualizer()
+    }
+
+    return () => {
+      stopVisualizer()
+    }
+  }, [isPlaying])
+
   return (
     <>
       <audio
@@ -84,6 +186,49 @@ export default function Navigation({ darkMode }: NavigationProps) {
         onPause={() => setIsPlaying(false)}
         onPlay={() => setIsPlaying(true)}
       />
+
+      {isPlaying && (
+        <div
+          className={`fixed top-24 right-4 md:right-6 z-[55] h-28 w-28 rounded-full border backdrop-blur-xl shadow-2xl ${
+            darkMode ? "bg-black/45 border-white/15" : "bg-white/70 border-black/10"
+          }`}
+        >
+          <svg viewBox="0 0 128 128" className="absolute inset-0">
+            <defs>
+              <linearGradient id="vizGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ec4899" />
+                <stop offset="52%" stopColor="#a855f7" />
+                <stop offset="100%" stopColor="#22d3ee" />
+              </linearGradient>
+              <filter id="vizGlow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="2.2" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {[0, 0.12, 0.24, 0.36, 0.48, 0.6].map((offset, index) => (
+              <path
+                key={index}
+                d={buildWavePath(
+                  Math.min(1, visualizerEnergy * 1.25 + offset * 0.55),
+                  index * 0.55 + visualizerEnergy * 6.2,
+                )}
+                fill="none"
+                stroke="url(#vizGradient)"
+                strokeWidth={index === 0 ? 2.8 : 1.4}
+                strokeOpacity={index === 0 ? 0.95 : 0.42}
+                filter={index < 2 ? "url(#vizGlow)" : undefined}
+              />
+            ))}
+
+            <circle cx="64" cy="64" r="36" fill="rgba(2,6,23,0.88)" />
+            <circle cx="64" cy="64" r="34" fill="none" stroke="url(#vizGradient)" strokeWidth="2.3" />
+          </svg>
+        </div>
+      )}
 
       {/* Floating Navigation */}
       <div className="fixed top-6 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none">
