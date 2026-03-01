@@ -53,6 +53,7 @@ const aboutLines = [
   "Finds peace in reading documentation and fixing broken dependencies.",
   "Customizing everything from the bootloader down to his FiraCode font ligatures.",
 ];
+const TAP_BPM_STORAGE_KEY = "music-tap-bpm-v1";
 
 export default function DevMascot({
   darkMode,
@@ -63,6 +64,8 @@ export default function DevMascot({
   const [showBubble, setShowBubble] = useState(false);
   const [path, setPath] = useState<Array<{ x: number; y: number }>>([]);
   const [lastTapAt, setLastTapAt] = useState(0);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [musicBpm, setMusicBpm] = useState<number | null>(null);
   const aboutIndexRef = useRef(0);
   const size = 68;
   const margin = 16;
@@ -86,6 +89,25 @@ export default function DevMascot({
       window.clearInterval(intervalTimer);
     };
   }, [lastTapAt]);
+
+  useEffect(() => {
+    const syncMusicState = () => {
+      const audio = document.getElementById("brand-song") as HTMLAudioElement | null;
+      setIsMusicPlaying(Boolean(audio && !audio.paused));
+
+      const storedBpm = window.localStorage.getItem(TAP_BPM_STORAGE_KEY);
+      if (storedBpm) {
+        const parsed = Number(storedBpm);
+        setMusicBpm(Number.isFinite(parsed) ? parsed : null);
+      } else {
+        setMusicBpm(null);
+      }
+    };
+
+    syncMusicState();
+    const timer = window.setInterval(syncMusicState, 350);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (reducedEffects) {
@@ -140,7 +162,9 @@ export default function DevMascot({
         reducedEffects || path.length === 0
           ? { duration: 0.2 }
           : {
-              duration: 28,
+              duration: isMusicPlaying
+                ? Math.max(8, ((path.length - 1) * 3 * 60) / (musicBpm ?? 124))
+                : 28,
               repeat: Number.POSITIVE_INFINITY,
               ease: "linear",
             }
@@ -174,6 +198,24 @@ export default function DevMascot({
       <motion.button
         type="button"
         onClick={onClick}
+        animate={
+          !reducedEffects && isMusicPlaying
+            ? {
+                rotate: [-4, 6, -4],
+                y: [0, -6, 0],
+                scale: [1, 1.08, 1],
+              }
+            : undefined
+        }
+        transition={
+          !reducedEffects && isMusicPlaying
+            ? {
+                duration: (60 / (musicBpm ?? 124)) * 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }
+            : undefined
+        }
         whileHover={{ scale: 1.06, rotate: -4 }}
         whileTap={{ scale: 0.94 }}
         className="relative h-[4.25rem] w-[4.25rem] pointer-events-auto"
