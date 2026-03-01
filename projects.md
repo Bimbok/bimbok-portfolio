@@ -23,3 +23,24 @@
 - Tech Stack
   - C++
 - [Github](https://github.com/Bimbok/fyzenor.git)
+
+4. Ping
+
+- A modern real-time communication platform built with React, Express, MongoDB, and Socket.IO.
+- Frontend
+  - **React 18** with Vite for fast development
+  - **Tailwind CSS** for utility-first styling
+  - **Material UI** for component library
+  - **Anime.js** for smooth animations
+  - **Three.js** for 3D graphics
+  - **Socket.IO Client** for real-time communication
+
+- Backend
+  - **Node.js** with Express
+  - **MongoDB** with Mongoose ODM
+  - **JWT** for authentication
+  - **Socket.IO** for WebSocket connections
+  - **bcryptjs** for password hashing
+
+- [Ping](https://ping-murex.vercel.app/)
+- [Github](https://github.com/aasaan-hainn/Ping.git)

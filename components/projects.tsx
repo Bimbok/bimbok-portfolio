@@ -42,74 +42,6 @@ interface ProjectItem {
 const projects: ProjectItem[] = [
   {
     id: 1,
-    title: "Documentation Hub",
-    description:
-      "A very vast code storage app, with proper highlighting, brief description.",
-    architecture:
-      "MERN architecture with modular API routes and structured document models for scalable snippets.",
-    challenge:
-      "Maintaining readable syntax blocks with metadata while keeping retrieval fast for large collections.",
-    impact:
-      "Improved code lookup and reuse workflow through centralized snippet organization.",
-    tech: ["MongoDB", "Mongoose", "Express.js", "Node.js"],
-    github: "https://github.com/Bimbok/documentationHub",
-    demo: "https://bimbokdocs.vercel.app/",
-    icon: Brain,
-    gradient: "from-blue-500 to-purple-500",
-  },
-  {
-    id: 2,
-    title: "Weather - Weathea",
-    description:
-      "A beautiful and feature-rich weather application. Built for simplicity.",
-    architecture:
-      "API-driven weather client with isolated data adapters and responsive UI components.",
-    challenge:
-      "Handling location-based fetches and weather-state transitions cleanly across devices.",
-    impact:
-      "Delivered a quick and intuitive weather experience with polished UI interactions.",
-    tech: ["MongoDB", "Express.js", "Node.js", "Stripe"],
-    github: "https://github.com/Bimbok/weatherApp",
-    demo: "https://weathia.vercel.app/",
-    icon: Code,
-    gradient: "from-green-500 to-teal-500",
-  },
-  {
-    id: 3,
-    title: "Real-time Chat Application",
-    description:
-      "Multi-room chat application with real-time messaging, file sharing, and user presence.",
-    architecture:
-      "Socket.IO event pipeline with room segmentation and persistent message storage.",
-    challenge:
-      "Keeping room state, presence, and delivery consistency stable in multi-user scenarios.",
-    impact:
-      "Enabled low-latency collaborative chat with practical room-level communication.",
-    tech: ["Socket.IO", "Node.js", "Express", "MongoDB", "React"],
-    github: "https://github.com/Bimbok/Now-Chat",
-    demo: "https://now-chat-4e5c.onrender.com/",
-    icon: Zap,
-    gradient: "from-pink-500 to-rose-500",
-  },
-  {
-    id: 4,
-    title: "Portfolio Website",
-    description:
-      "This anime-inspired portfolio website built with Next.js, featuring smooth animations.",
-    architecture:
-      "Next.js App Router with modular component sections and animation-driven interaction layers.",
-    challenge:
-      "Balancing heavy motion aesthetics with responsiveness and low-end device performance.",
-    impact:
-      "Created a memorable personal brand experience with strong interactivity and polish.",
-    tech: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
-    github: "https://github.com/Bimbok/bimbok-portfolio",
-    demo: "https://bimbok-portfolio.vercel.app/",
-    icon: Code,
-    gradient: "from-purple-500 to-indigo-500",
-  },
-  {
-    id: 5,
     title: "AlgoScope",
     description:
       "Interactive algorithm visualizer for sorting and searching concepts with step-by-step animations for learners and developers.",
@@ -126,7 +58,7 @@ const projects: ProjectItem[] = [
     gradient: "from-cyan-500 to-blue-500",
   },
   {
-    id: 6,
+    id: 2,
     title: "bimagic",
     description:
       "Bash-based Git workflow automation tool with an interactive menu for commit, branch, remote, and GitHub PAT-driven operations.",
@@ -143,7 +75,24 @@ const projects: ProjectItem[] = [
     gradient: "from-amber-500 to-orange-500",
   },
   {
-    id: 7,
+    id: 3,
+    title: "Ping",
+    description:
+      "A modern real-time communication platform built with React, Express, MongoDB, and Socket.IO.",
+    architecture:
+      "Full-stack real-time architecture using React + Vite frontend and Express + Socket.IO backend with JWT auth.",
+    challenge:
+      "Maintaining reliable room-based live communication with secure authentication and smooth UX.",
+    impact:
+      "Delivered a polished communication experience with scalable realtime messaging.",
+    tech: ["React", "Express", "MongoDB", "Socket.IO", "JWT", "Tailwind CSS"],
+    github: "https://github.com/aasaan-hainn/Ping.git",
+    demo: "https://ping-murex.vercel.app/",
+    icon: Zap,
+    gradient: "from-sky-500 to-indigo-500",
+  },
+  {
+    id: 4,
     title: "fyzenor",
     description:
       "Lightweight terminal file manager built in modern C++17 with fast navigation and asynchronous media preview support.",
@@ -158,6 +107,74 @@ const projects: ProjectItem[] = [
     demo: null,
     icon: Code,
     gradient: "from-emerald-500 to-teal-500",
+  },
+  {
+    id: 5,
+    title: "Documentation Hub",
+    description:
+      "A very vast code storage app, with proper highlighting, brief description.",
+    architecture:
+      "MERN architecture with modular API routes and structured document models for scalable snippets.",
+    challenge:
+      "Maintaining readable syntax blocks with metadata while keeping retrieval fast for large collections.",
+    impact:
+      "Improved code lookup and reuse workflow through centralized snippet organization.",
+    tech: ["MongoDB", "Mongoose", "Express.js", "Node.js"],
+    github: "https://github.com/Bimbok/documentationHub",
+    demo: "https://bimbokdocs.vercel.app/",
+    icon: Brain,
+    gradient: "from-blue-500 to-purple-500",
+  },
+  {
+    id: 6,
+    title: "Weather - Weathea",
+    description:
+      "A beautiful and feature-rich weather application. Built for simplicity.",
+    architecture:
+      "API-driven weather client with isolated data adapters and responsive UI components.",
+    challenge:
+      "Handling location-based fetches and weather-state transitions cleanly across devices.",
+    impact:
+      "Delivered a quick and intuitive weather experience with polished UI interactions.",
+    tech: ["MongoDB", "Express.js", "Node.js", "Stripe"],
+    github: "https://github.com/Bimbok/weatherApp",
+    demo: "https://weathia.vercel.app/",
+    icon: Code,
+    gradient: "from-green-500 to-teal-500",
+  },
+  {
+    id: 7,
+    title: "Real-time Chat Application",
+    description:
+      "Multi-room chat application with real-time messaging, file sharing, and user presence.",
+    architecture:
+      "Socket.IO event pipeline with room segmentation and persistent message storage.",
+    challenge:
+      "Keeping room state, presence, and delivery consistency stable in multi-user scenarios.",
+    impact:
+      "Enabled low-latency collaborative chat with practical room-level communication.",
+    tech: ["Socket.IO", "Node.js", "Express", "MongoDB", "React"],
+    github: "https://github.com/Bimbok/Now-Chat",
+    demo: "https://now-chat-4e5c.onrender.com/",
+    icon: Code,
+    gradient: "from-pink-500 to-rose-500",
+  },
+  {
+    id: 8,
+    title: "Portfolio Website",
+    description:
+      "This anime-inspired portfolio website built with Next.js, featuring smooth animations.",
+    architecture:
+      "Next.js App Router with modular component sections and animation-driven interaction layers.",
+    challenge:
+      "Balancing heavy motion aesthetics with responsiveness and low-end device performance.",
+    impact:
+      "Created a memorable personal brand experience with strong interactivity and polish.",
+    tech: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
+    github: "https://github.com/Bimbok/bimbok-portfolio",
+    demo: "https://bimbok-portfolio.vercel.app/",
+    icon: Code,
+    gradient: "from-purple-500 to-indigo-500",
   },
 ];
 
