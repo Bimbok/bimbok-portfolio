@@ -70,7 +70,7 @@ export default function Home() {
   const triggerPartyMode = () => {
     if (reducedEffects) return
     setPartyMode(true)
-    window.setTimeout(() => setPartyMode(false), 2200)
+    window.setTimeout(() => setPartyMode(false), 3200)
   }
 
   return (
@@ -121,24 +121,81 @@ export default function Home() {
 
       {partyMode && (
         <div className="fixed inset-0 pointer-events-none z-[65]">
-          {Array.from({ length: 22 }).map((_, index) => (
+          <motion.div
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.45, 0] }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            style={{
+              background:
+                "radial-gradient(circle at 50% 40%, rgba(236,72,153,0.35), rgba(59,130,246,0.2) 40%, transparent 68%)",
+            }}
+          />
+
+          {Array.from({ length: 3 }).map((_, ring) => (
+            <motion.div
+              key={`ring-${ring}`}
+              className="absolute left-1/2 top-[42%] rounded-full border"
+              style={{
+                width: 60 + ring * 90,
+                height: 60 + ring * 90,
+                marginLeft: -(30 + ring * 45),
+                marginTop: -(30 + ring * 45),
+                borderColor: ring % 2 === 0 ? "rgba(236,72,153,0.7)" : "rgba(59,130,246,0.65)",
+              }}
+              initial={{ scale: 0.2, opacity: 0.8 }}
+              animate={{ scale: 3.5, opacity: 0 }}
+              transition={{ duration: 1.15 + ring * 0.15, ease: "easeOut", delay: ring * 0.08 }}
+            />
+          ))}
+
+          {Array.from({ length: 18 }).map((_, index) => (
             <motion.span
-              key={index}
-              className="absolute h-2.5 w-2.5 rounded-full"
+              key={`streak-${index}`}
+              className="absolute left-1/2 top-[42%] w-[3px] h-24 origin-bottom rounded-full"
+              style={{
+                marginLeft: -1.5,
+                transform: `rotate(${index * 20}deg)`,
+                background:
+                  index % 2 === 0
+                    ? "linear-gradient(to top, rgba(236,72,153,0.95), rgba(236,72,153,0))"
+                    : "linear-gradient(to top, rgba(59,130,246,0.95), rgba(59,130,246,0))",
+              }}
+              initial={{ scaleY: 0.2, opacity: 0 }}
+              animate={{ scaleY: [0.3, 1.35, 0], opacity: [0, 1, 0] }}
+              transition={{ duration: 0.95, ease: "easeOut", delay: (index % 6) * 0.04 }}
+            />
+          ))}
+
+          {Array.from({ length: 58 }).map((_, index) => (
+            <motion.span
+              key={`dot-${index}`}
+              className="absolute"
               style={{
                 left: `${Math.random() * 100}%`,
-                top: "-10px",
+                top: `${-10 - Math.random() * 120}px`,
+                width: `${2 + Math.random() * 6}px`,
+                height: `${8 + Math.random() * 22}px`,
+                borderRadius: Math.random() > 0.5 ? "999px" : "2px",
                 background:
                   index % 2 === 0
                     ? "linear-gradient(120deg, #ec4899, #a855f7)"
                     : "linear-gradient(120deg, #3b82f6, #22d3ee)",
+                boxShadow:
+                  index % 2 === 0 ? "0 0 12px rgba(236,72,153,0.55)" : "0 0 12px rgba(59,130,246,0.55)",
               }}
-              initial={{ y: -10, opacity: 0, rotate: 0 }}
-              animate={{ y: "110vh", opacity: [0, 1, 0.9, 0], rotate: 360 }}
+              initial={{ y: -20, opacity: 0, rotate: 0, scale: 0.6 }}
+              animate={{
+                y: "120vh",
+                x: `${(Math.random() - 0.5) * 120}px`,
+                opacity: [0, 1, 1, 0],
+                rotate: Math.random() > 0.5 ? 720 : -720,
+                scale: [0.6, 1, 0.7],
+              }}
               transition={{
-                duration: 1.8 + Math.random() * 0.8,
+                duration: 1.9 + Math.random() * 1.4,
                 ease: "easeOut",
-                delay: Math.random() * 0.25,
+                delay: Math.random() * 0.45,
               }}
             />
           ))}
