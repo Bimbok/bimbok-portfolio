@@ -4,13 +4,13 @@ import dynamic from "next/dynamic"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Hero from "@/components/hero"
-import About from "@/components/about"
-import Skills from "@/components/skills"
-import Projects from "@/components/projects"
-import Contact from "@/components/contact"
 import Navigation from "@/components/navigation"
 import ThemeToggle from "@/components/theme-toggle"
 
+const About = dynamic(() => import("@/components/about"))
+const Skills = dynamic(() => import("@/components/skills"))
+const Projects = dynamic(() => import("@/components/projects"))
+const Contact = dynamic(() => import("@/components/contact"))
 const ParticleBackground = dynamic(() => import("@/components/particle-background"), { ssr: false })
 const CustomCursor = dynamic(() => import("@/components/custom-cursor"), { ssr: false })
 const CommandDeck = dynamic(() => import("@/components/command-deck"), { ssr: false })

@@ -19,6 +19,8 @@ const ORB_SIZE = 112
 const ORB_MARGIN = 12
 const ORB_STORAGE_KEY = "music-orb-position-v1"
 const TAP_BPM_STORAGE_KEY = "music-tap-bpm-v1"
+const MUSIC_STATE_EVENT = "brand-song-state"
+const MUSIC_BPM_EVENT = "brand-song-bpm"
 
 export default function Navigation({ darkMode }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
@@ -35,6 +37,7 @@ export default function Navigation({ darkMode }: NavigationProps) {
   const analyserRef = useRef<AnalyserNode | null>(null)
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
   const rafRef = useRef<number | null>(null)
+  const visualizerFrameTimeRef = useRef(0)
   const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
   const tapIntervalsRef = useRef<number[]>([])
   const visualizerEnergy = useMemo(
@@ -110,10 +113,25 @@ export default function Navigation({ darkMode }: NavigationProps) {
         const normalizedBpm = Math.min(220, Math.max(48, bpm))
         setTapBpm(normalizedBpm)
         window.localStorage.setItem(TAP_BPM_STORAGE_KEY, String(normalizedBpm))
+        window.dispatchEvent(new CustomEvent(MUSIC_BPM_EVENT, { detail: { bpm: normalizedBpm } }))
       } else {
         tapIntervalsRef.current = []
       }
     }
+  }
+
+  const emitMusicState = (playing: boolean) => {
+    window.dispatchEvent(new CustomEvent(MUSIC_STATE_EVENT, { detail: { isPlaying: playing } }))
+  }
+
+  const handleAudioPlay = () => {
+    setIsPlaying(true)
+    emitMusicState(true)
+  }
+
+  const handleAudioPause = () => {
+    setIsPlaying(false)
+    emitMusicState(false)
   }
 
   useEffect(() => {
@@ -154,15 +172,15 @@ export default function Navigation({ darkMode }: NavigationProps) {
 
     if (isPlaying) {
       audio.pause()
-      setIsPlaying(false)
+      handleAudioPause()
       return
     }
 
     try {
       await audio.play()
-      setIsPlaying(true)
+      handleAudioPlay()
     } catch {
-      setIsPlaying(false)
+      handleAudioPause()
     }
   }
 
@@ -211,6 +229,13 @@ export default function Navigation({ darkMode }: NavigationProps) {
 
       const tick = () => {
         analyser.getByteFrequencyData(dataArray)
+        const now = performance.now()
+        if (now - visualizerFrameTimeRef.current < 33) {
+          rafRef.current = window.requestAnimationFrame(tick)
+          return
+        }
+        visualizerFrameTimeRef.current = now
+
         const bins = 12
         const chunk = Math.floor(bufferLength / bins)
         const nextLevels = Array.from({ length: bins }, (_, index) => {
@@ -246,6 +271,7 @@ export default function Navigation({ darkMode }: NavigationProps) {
         setTapBpm(null)
         tapIntervalsRef.current = []
         window.localStorage.removeItem(TAP_BPM_STORAGE_KEY)
+        window.dispatchEvent(new CustomEvent(MUSIC_BPM_EVENT, { detail: { bpm: null } }))
       }
     }, 1000)
 
@@ -282,8 +308,8 @@ export default function Navigation({ darkMode }: NavigationProps) {
         src="/Suzume_No_Tojimari.mp3"
         loop
         preload="metadata"
-        onPause={() => setIsPlaying(false)}
-        onPlay={() => setIsPlaying(true)}
+        onPause={handleAudioPause}
+        onPlay={handleAudioPlay}
       />
 
       <AnimatePresence>

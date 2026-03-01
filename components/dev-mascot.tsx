@@ -54,6 +54,8 @@ const aboutLines = [
   "Customizing everything from the bootloader down to his FiraCode font ligatures.",
 ];
 const TAP_BPM_STORAGE_KEY = "music-tap-bpm-v1";
+const MUSIC_STATE_EVENT = "brand-song-state";
+const MUSIC_BPM_EVENT = "brand-song-bpm";
 
 export default function DevMascot({
   darkMode,
@@ -91,22 +93,38 @@ export default function DevMascot({
   }, [lastTapAt]);
 
   useEffect(() => {
-    const syncMusicState = () => {
-      const audio = document.getElementById("brand-song") as HTMLAudioElement | null;
-      setIsMusicPlaying(Boolean(audio && !audio.paused));
+    const audio = document.getElementById("brand-song") as HTMLAudioElement | null;
+    setIsMusicPlaying(Boolean(audio && !audio.paused));
 
-      const storedBpm = window.localStorage.getItem(TAP_BPM_STORAGE_KEY);
-      if (storedBpm) {
-        const parsed = Number(storedBpm);
-        setMusicBpm(Number.isFinite(parsed) ? parsed : null);
-      } else {
+    const storedBpm = window.localStorage.getItem(TAP_BPM_STORAGE_KEY);
+    if (storedBpm) {
+      const parsed = Number(storedBpm);
+      setMusicBpm(Number.isFinite(parsed) ? parsed : null);
+    }
+
+    const onState = (event: Event) => {
+      const payload = (event as CustomEvent<{ isPlaying?: boolean }>).detail;
+      if (typeof payload?.isPlaying === "boolean") {
+        setIsMusicPlaying(payload.isPlaying);
+      }
+    };
+
+    const onBpm = (event: Event) => {
+      const payload = (event as CustomEvent<{ bpm?: number | null }>).detail;
+      if (typeof payload?.bpm === "number") {
+        setMusicBpm(payload.bpm);
+      } else if (payload?.bpm === null) {
         setMusicBpm(null);
       }
     };
 
-    syncMusicState();
-    const timer = window.setInterval(syncMusicState, 350);
-    return () => window.clearInterval(timer);
+    window.addEventListener(MUSIC_STATE_EVENT, onState as EventListener);
+    window.addEventListener(MUSIC_BPM_EVENT, onBpm as EventListener);
+
+    return () => {
+      window.removeEventListener(MUSIC_STATE_EVENT, onState as EventListener);
+      window.removeEventListener(MUSIC_BPM_EVENT, onBpm as EventListener);
+    };
   }, []);
 
   useEffect(() => {
