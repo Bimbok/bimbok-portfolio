@@ -14,6 +14,9 @@ import {
   ExternalLink,
   Github,
   Zap,
+  Terminal,
+  Layout,
+  FileText,
   Brain,
   Code,
   ArrowUpRight,
@@ -59,6 +62,54 @@ const projects: ProjectItem[] = [
   },
   {
     id: 2,
+    title: "bDoci",
+    description:
+      "A native Android knowledge base for developers featuring a floating PiP window and offline P2P sync.",
+    architecture:
+      "Modern Android MVVM architecture using Kotlin Coroutines, Room Database for offline-first caching, and a WindowManager-based background service.",
+    challenge:
+      "Implementing a persistent, draggable floating UI that overlays other apps and building a zero-network P2P sync engine using Base64-encoded QR deep links.",
+    impact:
+      "Eliminated context-switching friction for mobile developers, allowing instant access to documentation during tutorials with zero battery-draining polling.",
+    tech: [
+      "Kotlin",
+      "Room DB",
+      "FCM",
+      "Retrofit",
+      "WindowManager API",
+      "ZXing",
+    ],
+    github: "https://github.com/Bimbok/bDoci-app.git",
+    demo: "https://github.com/Bimbok/bDoci-app/releases",
+    icon: Layout,
+    gradient: "from-orange-500 to-yellow-600",
+  },
+  {
+    id: 3,
+    title: "Sizuka",
+    description:
+      "A custom, dynamically typed interpreted programming language built entirely from scratch for the JVM.",
+    architecture:
+      "Three-stage pipeline featuring a custom Lexer, Recursive Descent Parser, and a Tree-Walk Interpreter using the Visitor pattern.",
+    challenge:
+      "Engineering complex AST operator precedence, lexical scoping, and custom array data structures ('packs') without relying on existing parsing tools.",
+    impact:
+      "Achieved a fully Turing-complete, embeddable scripting environment capable of running manual-stack iterative algorithms like Quick Sort in sub-50ms.",
+    tech: [
+      "Java",
+      "Compiler Design",
+      "AST",
+      "Recursive Descent",
+      "Visitor Pattern",
+      "JVM",
+    ],
+    github: "https://github.com/Bimbok/sizuka",
+    demo: "https://github.com/Bimbok/sizuka/releases",
+    icon: Terminal,
+    gradient: "from-purple-500 to-indigo-600",
+  },
+  {
+    id: 4,
     title: "bimagic",
     description:
       "Bash-based Git workflow automation tool with an interactive menu for commit, branch, remote, and GitHub PAT-driven operations.",
@@ -70,12 +121,12 @@ const projects: ProjectItem[] = [
       "Reduced command overhead for repetitive Git workflows and improved terminal productivity.",
     tech: ["Bash", "Git", "GitHub CLI"],
     github: "https://github.com/orion-kernel/bimagic.git",
-    demo: null,
+    demo: "https://github.com/orion-kernel/bimagic/releases",
     icon: Zap,
     gradient: "from-amber-500 to-orange-500",
   },
   {
-    id: 3,
+    id: 5,
     title: "Ping",
     description:
       "A modern real-time communication platform built with React, Express, MongoDB, and Socket.IO.",
@@ -92,7 +143,30 @@ const projects: ProjectItem[] = [
     gradient: "from-sky-500 to-indigo-500",
   },
   {
-    id: 4,
+    id: 6,
+    title: "Koala",
+    description:
+      "A hyper-optimized, lightweight Android PDF reader focusing on blazing-fast rendering and an immersive edge-to-edge UI.",
+    architecture:
+      "Native Android MVVM architecture powered by Jetpack Compose, Kotlin Coroutines for asynchronous off-main-thread processing, and PdfiumAndroid for high-fidelity rendering.",
+    challenge:
+      "Managing severe memory constraints via intelligent Bitmap pooling and predictive background LruCaching, alongside implementing a custom ColorMatrix for true dark mode inversion.",
+    impact:
+      "Delivered a zero-stutter, highly responsive reading experience that drastically reduces battery drain and memory footprint compared to bloated traditional document readers.",
+    tech: [
+      "Kotlin",
+      "Jetpack Compose",
+      "Coroutines",
+      "PdfiumAndroid",
+      "LruCache",
+    ],
+    github: "https://github.com/Bimbok/Koala.git",
+    demo: "https://github.com/Bimbok/Koala/releases",
+    icon: FileText,
+    gradient: "from-emerald-500 to-teal-600",
+  },
+  {
+    id: 7,
     title: "fyzenor",
     description:
       "Lightweight terminal file manager built in modern C++17 with fast navigation and asynchronous media preview support.",
@@ -109,7 +183,7 @@ const projects: ProjectItem[] = [
     gradient: "from-emerald-500 to-teal-500",
   },
   {
-    id: 5,
+    id: 8,
     title: "Documentation Hub",
     description:
       "A very vast code storage app, with proper highlighting, brief description.",
@@ -126,7 +200,7 @@ const projects: ProjectItem[] = [
     gradient: "from-blue-500 to-purple-500",
   },
   {
-    id: 6,
+    id: 9,
     title: "Weather - Weathea",
     description:
       "A beautiful and feature-rich weather application. Built for simplicity.",
@@ -143,7 +217,7 @@ const projects: ProjectItem[] = [
     gradient: "from-green-500 to-teal-500",
   },
   {
-    id: 7,
+    id: 10,
     title: "Real-time Chat Application",
     description:
       "Multi-room chat application with real-time messaging, file sharing, and user presence.",
@@ -160,7 +234,7 @@ const projects: ProjectItem[] = [
     gradient: "from-pink-500 to-rose-500",
   },
   {
-    id: 8,
+    id: 11,
     title: "Portfolio Website",
     description:
       "This anime-inspired portfolio website built with Next.js, featuring smooth animations.",
