@@ -54,12 +54,29 @@ const skills = [
   },
   { name: "Java", level: 80, color: "from-red-400 to-rose-400", icon: Coffee },
   {
+    name: "Linux",
+    level: 85,
+    color: "from-purple-500 to-pink-500",
+    icon: Terminal,
+  },
+  {
+    name: "Advanced CLI Tooling",
+    level: 88,
+    color: "from-zinc-400 to-stone-400",
+    icon: TerminalIcon,
+  },
+  {
     name: "MongoDB",
     level: 75,
     color: "from-green-500 to-teal-400",
     icon: Database,
   },
-  { name: "SQL", level: 85, color: "from-sky-400 to-blue-500", icon: Table },
+  {
+    name: "PostgreSQL",
+    level: 85,
+    color: "from-sky-400 to-blue-500",
+    icon: Table,
+  },
   {
     name: "Flask",
     level: 82,
@@ -73,16 +90,10 @@ const skills = [
     icon: Zap,
   },
   {
-    name: "AWS",
+    name: "DevOps",
     level: 80,
     color: "from-orange-400 to-amber-500",
     icon: Cloud,
-  },
-  {
-    name: "Advanced CLI Tooling",
-    level: 88,
-    color: "from-zinc-400 to-stone-400",
-    icon: TerminalIcon,
   },
   {
     name: "Assembly & Systems",
