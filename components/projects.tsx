@@ -21,6 +21,7 @@ import {
   Code,
   ArrowUpRight,
   RefreshCw,
+  Sparkles,
 } from "lucide-react";
 import { IconWrapper } from "./ui/icon-wrapper";
 
@@ -235,6 +236,30 @@ const projects: ProjectItem[] = [
   },
   {
     id: 11,
+    title: "creAItr.",
+    description:
+      "An AI-powered application designed to streamline the creative design process, featuring an interactive canvas, various design tools, and an AI chat interface.",
+    tech: [
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Python",
+      "MongoDB",
+    ],
+    architecture:
+      "A decoupled architecture with a React/Vite frontend for the interactive design workspace and a Python-based backend handling core logic, file ingestion, and AI integrations.",
+    challenge:
+      "Building a fluid, real-time interactive canvas (Canvas, PhotoEditor, VideoEditor) while managing complex state and integrating various AI-driven design and reasoning agents.",
+    impact:
+      "Provides a unified, intelligent workspace that accelerates design workflows by combining traditional editing tools with agentic AI capabilities.",
+    github: "https://github.com/aasaan-hainn/creAItr..git",
+    demo: "https://creaitr.arghyadevs.me/",
+    icon: Sparkles,
+    gradient: "from-pink-500 to-rose-500", // Suggested gradient, adjust as needed
+  },
+  {
+    id: 12,
     title: "Portfolio Website",
     description:
       "This anime-inspired portfolio website built with Next.js, featuring smooth animations.",

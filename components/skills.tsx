@@ -19,6 +19,7 @@ import {
   Zap,
   Terminal,
   Layers,
+  Table,
 } from "lucide-react";
 import { IconWrapper } from "./ui/icon-wrapper";
 
@@ -58,6 +59,7 @@ const skills = [
     color: "from-green-500 to-teal-400",
     icon: Database,
   },
+  { name: "SQL", level: 85, color: "from-sky-400 to-blue-500", icon: Table },
   {
     name: "Flask",
     level: 82,
