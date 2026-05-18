@@ -13,6 +13,7 @@ const Projects = dynamic(() => import("@/components/projects"))
 const Contact = dynamic(() => import("@/components/contact"))
 const ParticleBackground = dynamic(() => import("@/components/particle-background"), { ssr: false })
 const CustomCursor = dynamic(() => import("@/components/custom-cursor"), { ssr: false })
+const SplashCursor = dynamic(() => import("@/components/splash-cursor"), { ssr: false })
 const CommandDeck = dynamic(() => import("@/components/command-deck"), { ssr: false })
 const DevMascot = dynamic(() => import("@/components/dev-mascot"), { ssr: false })
 
@@ -81,6 +82,18 @@ export default function Home() {
           : "bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50"
       }`}
     >
+      {!reducedEffects && (
+        <SplashCursor
+          SIM_RESOLUTION={96}
+          DYE_RESOLUTION={900}
+          CURL={4}
+          SPLAT_RADIUS={0.22}
+          SPLAT_FORCE={5600}
+          COLOR_UPDATE_SPEED={8}
+          RAINBOW_MODE={false}
+          COLOR={darkMode ? "#A855F7" : "#EC4899"}
+        />
+      )}
       {!reducedEffects && <CustomCursor darkMode={darkMode} />}
       
       {/* Decorative Glows */}
