@@ -22,46 +22,46 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col items-center mb-20">
+    <div className="max-w-7xl mx-auto px-2 sm:px-4">
+      <div className="flex flex-col items-center mb-12 md:mb-20">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="relative inline-block"
         >
-          <h1 className="text-6xl md:text-8xl font-black mb-6 text-center tracking-tighter">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black mb-4 md:mb-6 text-center tracking-tighter leading-none">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-purple-500 dark:to-purple-400">
               CHRONICLES
             </span>
             <br />
-            <span className="text-foreground/40 dark:text-white/20">& SNAPSHOTS</span>
+            <span className="text-foreground/40 dark:text-white/20 text-3xl sm:text-5xl md:text-7xl">& SNAPSHOTS</span>
           </h1>
-          <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/20 blur-[100px] rounded-full opacity-50" />
+          <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/20 blur-[60px] md:blur-[100px] rounded-full opacity-50" />
         </motion.div>
         
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-muted-foreground text-center max-w-2xl text-lg font-light tracking-wide"
+          className="text-muted-foreground text-center max-w-2xl text-base sm:text-lg font-light tracking-wide px-4"
         >
           A cinematic journey through moments captured and stories lived.
         </motion.p>
       </div>
 
       <Tabs defaultValue="gallery" className="w-full">
-        <div className="flex justify-center mb-16">
-          <TabsList className="h-14 p-1 bg-muted/50 backdrop-blur-2xl border border-border rounded-full w-full max-w-[400px]">
+        <div className="flex justify-center mb-10 md:mb-16 px-4">
+          <TabsList className="h-12 md:h-14 p-1 bg-muted/50 backdrop-blur-2xl border border-border rounded-full w-full max-w-[320px] md:max-w-[400px]">
             <TabsTrigger 
               value="gallery" 
-              className="rounded-full h-full text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
+              className="rounded-full h-full text-sm md:text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
             >
               Gallery
             </TabsTrigger>
             <TabsTrigger 
               value="blogs" 
-              className="rounded-full h-full text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
+              className="rounded-full h-full text-sm md:text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
             >
               Chronicles
             </TabsTrigger>

@@ -57,14 +57,17 @@ export default function CircularGallery({
 
   if (photos.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-border rounded-[2rem] bg-muted/30 backdrop-blur-md">
+      <div 
+        ref={containerRef}
+        className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-border rounded-[2rem] bg-muted/30 backdrop-blur-md"
+      >
         <p className="text-xl font-light">The gallery is waiting for its first snapshot.</p>
       </div>
     );
   }
 
   return (
-    <div className="relative py-24 overflow-hidden" ref={containerRef}>
+    <div className="relative py-12 md:py-24 overflow-hidden" ref={containerRef}>
       {/* Structured Data for Google Image Search */}
       <script
         type="application/ld+json"
@@ -91,7 +94,7 @@ export default function CircularGallery({
           })
         }}
       />
-      <div className="flex flex-wrap justify-center gap-8 px-4 max-w-7xl mx-auto">
+      <div className="flex flex-wrap justify-center gap-4 md:gap-8 px-4 max-w-7xl mx-auto">
         {photos.map((photo, index) => {
           const rotationBase = (index % 3 - 1) * 5 * bend;
           
@@ -164,7 +167,7 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
               rotateZ: rotationBase,
             }}
             whileHover={{ scale: 1.05, rotateZ: 0, z: 50 }}
-            className="group relative w-64 h-80 cursor-pointer"
+            className="group relative w-[calc(100vw-3rem)] sm:w-64 h-[calc(1.25*(100vw-3rem))] sm:h-80 cursor-pointer max-w-[320px] max-h-[400px]"
           >
             <div 
               className="absolute inset-0 bg-secondary/20 backdrop-blur-xl border border-border/50 shadow-2xl overflow-hidden transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-primary/20"
@@ -175,13 +178,13 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
                 alt={photo.description || "Portfolio Photo"}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
-                sizes="256px"
+                sizes="(max-width: 640px) 320px, 256px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
                 <motion.p 
                   initial={{ y: 10, opacity: 0 }}
                   whileHover={{ y: 0, opacity: 1 }}
-                  className="text-white text-sm font-light tracking-wide leading-relaxed"
+                  className="text-white text-sm font-light tracking-wide leading-relaxed line-clamp-2 sm:line-clamp-none"
                 >
                   {photo.description}
                 </motion.p>
@@ -192,25 +195,46 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
             <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </motion.div>
         </DialogTrigger>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden bg-background/90 backdrop-blur-3xl border border-border rounded-[2.5rem]">
+        <DialogContent className="max-w-5xl p-0 overflow-hidden bg-background/90 backdrop-blur-3xl border border-border rounded-[1.5rem] sm:rounded-[2.5rem] w-[95vw] sm:w-full">
           <div className="sr-only">
             <DialogTitle>{photo.description || "Photo Preview"}</DialogTitle>
           </div>
-          <div className="relative aspect-auto h-[85vh] w-full flex items-center justify-center p-4">
+          <div className="relative aspect-auto h-[60vh] sm:h-[85vh] w-full flex items-center justify-center p-4">
             <Image
               src={photo.url}
               alt={photo.description || "Portfolio Photo"}
               fill
-              className="object-contain rounded-[2rem]"
+              className="object-contain rounded-[1rem] sm:rounded-[2rem]"
             />
           </div>
           {photo.description && (
-            <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
-              <p className="text-white text-xl font-light tracking-wider text-center">{photo.description}</p>
+            <div className="p-4 sm:p-8 bg-gradient-to-t from-black/90 to-black/40 sm:to-transparent sm:absolute sm:bottom-0 sm:left-0 sm:right-0">
+              <DescriptionWithShowMore text={photo.description} />
             </div>
           )}
         </DialogContent>
       </Dialog>
     </motion.div>
+  );
+}
+
+function DescriptionWithShowMore({ text }: { text: string }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isLongText = text.length > 150;
+
+  return (
+    <div className="text-center">
+      <p className={`text-white text-sm sm:text-xl font-light tracking-wider leading-relaxed ${!isExpanded && isLongText ? "line-clamp-2" : ""}`}>
+        {text}
+      </p>
+      {isLongText && (
+        <button 
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="mt-2 text-primary text-xs sm:text-sm font-bold uppercase tracking-tighter hover:underline"
+        >
+          {isExpanded ? "Show Less" : "Show More"}
+        </button>
+      )}
+    </div>
   );
 }

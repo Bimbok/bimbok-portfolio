@@ -20,7 +20,7 @@ export default function BlogList({ posts }: BlogListProps) {
   }
 
   return (
-    <div className="max-w-5xl mx-auto py-12 px-4 space-y-12">
+    <div className="max-w-5xl mx-auto py-8 md:py-12 px-4 space-y-8 md:space-y-12">
       {/* Structured Data for Google Search */}
       <script
         type="application/ld+json"
@@ -56,34 +56,34 @@ export default function BlogList({ posts }: BlogListProps) {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Card className="group relative overflow-hidden bg-secondary/20 backdrop-blur-xl border border-border hover:border-primary/40 transition-all duration-500 rounded-[2.5rem] shadow-2xl">
-            <div className="p-8 md:p-12">
-              <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-6 font-light tracking-widest uppercase">
+          <Card className="group relative overflow-hidden bg-secondary/20 backdrop-blur-xl border border-border hover:border-primary/40 transition-all duration-500 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl">
+            <div className="p-6 md:p-12">
+              <div className="flex flex-wrap items-center gap-4 md:gap-6 text-xs md:text-sm text-muted-foreground mb-4 md:mb-6 font-light tracking-widest uppercase">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-primary" />
+                  <Calendar className="w-3.5 h-3.5 md:w-4 h-4 text-primary" />
                   {format(new Date(post.createdAt), "MMMM dd, yyyy")}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-primary" />
+                  <Clock className="w-3.5 h-3.5 md:w-4 h-4 text-primary" />
                   {Math.ceil(post.content.split(' ').length / 200)} min read
                 </div>
               </div>
               
-              <CardTitle className="text-3xl md:text-5xl font-black mb-8 leading-tight tracking-tighter group-hover:text-primary transition-colors duration-500">
+              <CardTitle className="text-2xl sm:text-3xl md:text-5xl font-black mb-6 md:mb-8 leading-tight tracking-tighter group-hover:text-primary transition-colors duration-500">
                 {post.title}
               </CardTitle>
               
               <CardContent className="p-0">
-                <p className="text-muted-foreground text-lg md:text-xl line-clamp-3 mb-10 leading-relaxed font-light">
+                <p className="text-muted-foreground text-base md:text-xl line-clamp-3 mb-8 md:mb-10 leading-relaxed font-light">
                   {post.content}
                 </p>
                 <motion.div 
                   whileHover={{ x: 10 }}
-                  className="inline-flex items-center gap-3 text-primary font-bold text-lg cursor-pointer group/link tracking-tight"
+                  className="inline-flex items-center gap-3 text-primary font-bold text-base md:text-lg cursor-pointer group/link tracking-tight"
                 >
                   READ STORY
-                  <div className="w-12 h-[2px] bg-primary/30 group-hover/link:w-16 transition-all duration-500" />
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover/link:translate-x-1" />
+                  <div className="w-8 md:w-12 h-[2px] bg-primary/30 group-hover/link:w-16 transition-all duration-500" />
+                  <ArrowRight className="w-4 h-4 md:w-5 h-5 transition-transform group-hover/link:translate-x-1" />
                 </motion.div>
               </CardContent>
             </div>
