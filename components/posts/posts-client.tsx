@@ -31,11 +31,11 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
           className="relative inline-block"
         >
           <h1 className="text-6xl md:text-8xl font-black mb-6 text-center tracking-tighter">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-primary to-purple-400">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-purple-500 dark:to-purple-400">
               CHRONICLES
             </span>
             <br />
-            <span className="text-white/20">& SNAPSHOTS</span>
+            <span className="text-foreground/40 dark:text-white/20">& SNAPSHOTS</span>
           </h1>
           <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/20 blur-[100px] rounded-full opacity-50" />
         </motion.div>
@@ -52,16 +52,16 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
 
       <Tabs defaultValue="gallery" className="w-full">
         <div className="flex justify-center mb-16">
-          <TabsList className="h-14 p-1 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full w-full max-w-[400px]">
+          <TabsList className="h-14 p-1 bg-muted/50 backdrop-blur-2xl border border-border rounded-full w-full max-w-[400px]">
             <TabsTrigger 
               value="gallery" 
-              className="rounded-full h-full text-base font-medium transition-all duration-500 data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-white/60 hover:data-[state=inactive]:text-white"
+              className="rounded-full h-full text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
             >
               Gallery
             </TabsTrigger>
             <TabsTrigger 
               value="blogs" 
-              className="rounded-full h-full text-base font-medium transition-all duration-500 data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-white/60 hover:data-[state=inactive]:text-white"
+              className="rounded-full h-full text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
             >
               Chronicles
             </TabsTrigger>
@@ -96,9 +96,9 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
             variant="ghost" 
             size="icon" 
             onClick={() => setIsLoginOpen(true)}
-            className="w-10 h-10 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10"
+            className="w-10 h-10 rounded-full bg-background/50 backdrop-blur-md border border-border hover:bg-accent hover:text-accent-foreground"
           >
-            <Lock className="w-4 h-4 text-white/40" />
+            <Lock className="w-4 h-4 text-muted-foreground" />
           </Button>
         </div>
       )}

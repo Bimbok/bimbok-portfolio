@@ -73,7 +73,7 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: 
         </Button>
         <Button 
           onClick={() => setIsPostDialogOpen(true)}
-          className="rounded-full w-14 h-14 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:scale-110 active:scale-95 transition-all duration-300 bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 text-white"
+          className="rounded-full w-14 h-14 shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)] hover:scale-110 active:scale-95 transition-all duration-300 bg-secondary/80 backdrop-blur-xl border border-border hover:bg-secondary text-foreground"
         >
           <FileText className="w-6 h-6" />
         </Button>
@@ -89,14 +89,14 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: 
 
       {/* Photo Upload Dialog */}
       <Dialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen}>
-        <DialogContent className="sm:max-w-[450px] bg-slate-950/80 backdrop-blur-2xl border-white/10 rounded-[2rem] p-8 shadow-2xl">
+        <DialogContent className="sm:max-w-[450px] bg-background/80 backdrop-blur-2xl border-border rounded-[2rem] p-8 shadow-2xl">
           <DialogHeader className="mb-6">
-            <DialogTitle className="text-3xl font-black tracking-tighter text-white">Capture a Moment</DialogTitle>
-            <DialogDescription className="text-slate-400 font-light">Upload a new photo to your gallery.</DialogDescription>
+            <DialogTitle className="text-3xl font-black tracking-tighter text-foreground">Capture a Moment</DialogTitle>
+            <DialogDescription className="text-muted-foreground font-light">Upload a new photo to your gallery.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handlePhotoSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="file" className="text-sm font-medium text-slate-300 ml-1">Image File</Label>
+              <Label htmlFor="file" className="text-sm font-medium text-foreground/80 ml-1">Image File</Label>
               <div className="relative group">
                 <Input 
                   id="file" 
@@ -104,20 +104,20 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: 
                   type="file" 
                   accept="image/*" 
                   required 
-                  className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:ring-primary focus:border-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/80 transition-all cursor-pointer"
+                  className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80 transition-all cursor-pointer"
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-sm font-medium text-slate-300 ml-1">Description</Label>
+              <Label htmlFor="description" className="text-sm font-medium text-foreground/80 ml-1">Description</Label>
               <Input 
                 id="description" 
                 name="description" 
                 placeholder="A brief cinematic caption..." 
-                className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:ring-primary focus:border-primary placeholder:text-slate-600"
+                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary placeholder:text-muted-foreground/50"
               />
             </div>
-            <Button type="submit" className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold text-lg shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] transition-all" disabled={isLoading}>
+            <Button type="submit" className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] transition-all" disabled={isLoading}>
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
               {isLoading ? "Uploading..." : "Publish to Gallery"}
             </Button>
@@ -127,33 +127,33 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: 
 
       {/* Post Creation Dialog */}
       <Dialog open={isPostDialogOpen} onOpenChange={setIsPostDialogOpen}>
-        <DialogContent className="sm:max-w-[700px] bg-slate-950/80 backdrop-blur-2xl border-white/10 rounded-[2.5rem] p-10 shadow-2xl">
+        <DialogContent className="sm:max-w-[700px] bg-background/80 backdrop-blur-2xl border-border rounded-[2.5rem] p-10 shadow-2xl">
           <DialogHeader className="mb-8">
-            <DialogTitle className="text-4xl font-black tracking-tighter text-white">Write a Chronicle</DialogTitle>
-            <DialogDescription className="text-slate-400 font-light text-lg">Share your journey and thoughts with the world.</DialogDescription>
+            <DialogTitle className="text-4xl font-black tracking-tighter text-foreground">Write a Chronicle</DialogTitle>
+            <DialogDescription className="text-muted-foreground font-light text-lg">Share your journey and thoughts with the world.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handlePostSubmit} className="space-y-8">
             <div className="space-y-3">
-              <Label htmlFor="title" className="text-base font-medium text-slate-300 ml-1">Title</Label>
+              <Label htmlFor="title" className="text-base font-medium text-foreground/80 ml-1">Title</Label>
               <Input 
                 id="title" 
                 name="title" 
                 placeholder="The story begins with..." 
                 required 
-                className="bg-white/5 border-white/10 text-white h-16 rounded-2xl text-xl font-bold focus:ring-primary focus:border-primary placeholder:text-slate-700 px-6"
+                className="bg-secondary/20 border-border text-foreground h-16 rounded-2xl text-xl font-bold focus:ring-primary focus:border-primary placeholder:text-muted-foreground/30 px-6"
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="content" className="text-base font-medium text-slate-300 ml-1">Content</Label>
+              <Label htmlFor="content" className="text-base font-medium text-foreground/80 ml-1">Content</Label>
               <Textarea 
                 id="content" 
                 name="content" 
                 placeholder="Dive into the details..." 
-                className="min-h-[300px] bg-white/5 border-white/10 text-white rounded-2xl p-6 text-lg font-light leading-relaxed focus:ring-primary focus:border-primary placeholder:text-slate-700 resize-none"
+                className="min-h-[300px] bg-secondary/20 border-border text-foreground rounded-2xl p-6 text-lg font-light leading-relaxed focus:ring-primary focus:border-primary placeholder:text-muted-foreground/30 resize-none"
                 required 
               />
             </div>
-            <Button type="submit" className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black text-xl tracking-tight shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)] transition-all" disabled={isLoading}>
+            <Button type="submit" className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xl tracking-tight shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)] transition-all" disabled={isLoading}>
               {isLoading ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : null}
               {isLoading ? "Publishing..." : "Publish Chronicle"}
             </Button>

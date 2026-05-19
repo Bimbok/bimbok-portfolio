@@ -57,7 +57,7 @@ export default function CircularGallery({
 
   if (photos.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-white/10 rounded-[2rem] bg-white/5 backdrop-blur-md">
+      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-border rounded-[2rem] bg-muted/30 backdrop-blur-md">
         <p className="text-xl font-light">The gallery is waiting for its first snapshot.</p>
       </div>
     );
@@ -84,8 +84,8 @@ export default function CircularGallery({
       </div>
       
       {/* Premium background accents */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] -z-10 animate-pulse" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
     </div>
   );
 }
@@ -141,7 +141,7 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
             className="group relative w-64 h-80 cursor-pointer"
           >
             <div 
-              className="absolute inset-0 bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-primary/20"
+              className="absolute inset-0 bg-secondary/20 backdrop-blur-xl border border-border/50 shadow-2xl overflow-hidden transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-primary/20"
               style={{ borderRadius: `${borderRadius * 1000}px` }}
             >
               <Image
@@ -163,10 +163,10 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
             </div>
             
             {/* Glossy light effect */}
-            <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </motion.div>
         </DialogTrigger>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[2.5rem]">
+        <DialogContent className="max-w-5xl p-0 overflow-hidden bg-background/90 backdrop-blur-3xl border border-border rounded-[2.5rem]">
           <div className="sr-only">
             <DialogTitle>{photo.description || "Photo Preview"}</DialogTitle>
           </div>
@@ -179,7 +179,7 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
             />
           </div>
           {photo.description && (
-            <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+            <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 to-transparent">
               <p className="text-white text-xl font-light tracking-wider text-center">{photo.description}</p>
             </div>
           )}

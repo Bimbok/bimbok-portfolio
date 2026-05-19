@@ -13,7 +13,7 @@ interface BlogListProps {
 export default function BlogList({ posts }: BlogListProps) {
   if (posts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-white/10 rounded-[2rem] bg-white/5 backdrop-blur-md">
+      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-border rounded-[2rem] bg-muted/30 backdrop-blur-md">
         <p className="text-xl font-light">The chronicles haven't begun yet.</p>
       </div>
     );
@@ -29,7 +29,7 @@ export default function BlogList({ posts }: BlogListProps) {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Card className="group relative overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 hover:border-primary/40 transition-all duration-500 rounded-[2.5rem] shadow-2xl">
+          <Card className="group relative overflow-hidden bg-secondary/20 backdrop-blur-xl border border-border hover:border-primary/40 transition-all duration-500 rounded-[2.5rem] shadow-2xl">
             <div className="p-8 md:p-12">
               <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-6 font-light tracking-widest uppercase">
                 <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ export default function BlogList({ posts }: BlogListProps) {
             </div>
             
             {/* Glossy overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
             
             {/* Premium corner glow */}
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-[80px] rounded-full group-hover:bg-primary/20 transition-colors duration-700" />
