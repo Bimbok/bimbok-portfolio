@@ -1,91 +1,190 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useMotionValue,
+  useVelocity,
+  useAnimationFrame,
+} from "framer-motion";
 import Image from "next/image";
-import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 
 interface CircularGalleryProps {
   photos: any[];
+  bend?: number;
+  textColor?: string;
+  borderRadius?: number;
+  scrollSpeed?: number;
+  scrollEase?: number;
 }
 
-export default function CircularGallery({ photos }: CircularGalleryProps) {
+export default function CircularGallery({
+  photos,
+  bend = 1,
+  textColor = "#ffffff",
+  borderRadius = 0.05,
+  scrollSpeed = 2,
+  scrollEase = 0.05,
+}: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [selectedPhoto, setSelectedPhoto] = useState<any>(null);
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const scrollVelocity = useVelocity(scrollYProgress);
+  const smoothVelocity = useSpring(scrollVelocity, {
+    damping: 50,
+    stiffness: 400,
+  });
+
+  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
+    clamp: false,
+  });
 
   if (photos.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed rounded-xl">
-        <p>No snapshots captured yet.</p>
+      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-white/10 rounded-[2rem] bg-white/5 backdrop-blur-md">
+        <p className="text-xl font-light">The gallery is waiting for its first snapshot.</p>
       </div>
     );
   }
 
   return (
-    <div className="relative py-12 px-4" ref={containerRef}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {photos.map((photo, index) => (
-          <motion.div
-            key={photo._id || photo.id}
-            initial={{ opacity: 0, scale: 0.8, rotate: index % 2 === 0 ? -5 : 5 }}
-            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-            viewport={{ once: true }}
-            transition={{ 
-              duration: 0.5, 
-              delay: index * 0.1,
-              type: "spring",
-              stiffness: 100
-            }}
-            whileHover={{ 
-              scale: 1.05, 
-              zIndex: 10,
-              rotate: index % 2 === 0 ? 2 : -2
-            }}
-          >
-            <Dialog>
-              <DialogTrigger asChild>
-                <Card className="group relative aspect-[4/5] overflow-hidden cursor-pointer bg-muted border-none ring-1 ring-white/10 shadow-2xl">
-                  <Image
-                    src={photo.url}
-                    alt={photo.description || "Portfolio Photo"}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                    <p className="text-white text-sm font-medium line-clamp-2">
-                      {photo.description}
-                    </p>
-                  </div>
-                </Card>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl p-0 overflow-hidden bg-transparent border-none">
-                <div className="sr-only">
-                  <DialogTitle>{photo.description || "Photo Preview"}</DialogTitle>
-                </div>
-                <div className="relative aspect-video md:aspect-auto md:h-[80vh] w-full">
-                  <Image
-                    src={photo.url}
-                    alt={photo.description || "Portfolio Photo"}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                {photo.description && (
-                  <div className="p-6 bg-background/80 backdrop-blur-md absolute bottom-0 left-0 right-0">
-                    <p className="text-lg font-medium">{photo.description}</p>
-                  </div>
-                )}
-              </DialogContent>
-            </Dialog>
-          </motion.div>
-        ))}
+    <div className="relative py-24 overflow-hidden" ref={containerRef}>
+      <div className="flex flex-wrap justify-center gap-8 px-4 max-w-7xl mx-auto">
+        {photos.map((photo, index) => {
+          const rotationBase = (index % 3 - 1) * 5 * bend;
+          
+          return (
+            <GalleryItem 
+              key={photo._id || photo.id} 
+              photo={photo} 
+              index={index} 
+              bend={bend}
+              borderRadius={borderRadius}
+              rotationBase={rotationBase}
+              velocityFactor={velocityFactor}
+            />
+          );
+        })}
       </div>
       
-      {/* Decorative background elements */}
-      <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -z-10" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px] -z-10" />
+      {/* Premium background accents */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px] -z-10 animate-pulse" />
     </div>
+  );
+}
+
+function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityFactor }: any) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    x.set(mouseX / width - 0.5);
+    y.set(mouseY / height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ 
+        duration: 0.8, 
+        delay: index * 0.05,
+        ease: [0.16, 1, 0.3, 1]
+      }}
+      className="perspective-1000"
+    >
+      <Dialog>
+        <DialogTrigger asChild>
+          <motion.div
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ 
+              rotateX, 
+              rotateY,
+              rotateZ: rotationBase,
+            }}
+            whileHover={{ scale: 1.05, rotateZ: 0, z: 50 }}
+            className="group relative w-64 h-80 cursor-pointer"
+          >
+            <div 
+              className="absolute inset-0 bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl overflow-hidden transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-primary/20"
+              style={{ borderRadius: `${borderRadius * 1000}px` }}
+            >
+              <Image
+                src={photo.url}
+                alt={photo.description || "Portfolio Photo"}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                sizes="256px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+                <motion.p 
+                  initial={{ y: 10, opacity: 0 }}
+                  whileHover={{ y: 0, opacity: 1 }}
+                  className="text-white text-sm font-light tracking-wide leading-relaxed"
+                >
+                  {photo.description}
+                </motion.p>
+              </div>
+            </div>
+            
+            {/* Glossy light effect */}
+            <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          </motion.div>
+        </DialogTrigger>
+        <DialogContent className="max-w-5xl p-0 overflow-hidden bg-black/40 backdrop-blur-3xl border border-white/10 rounded-[2.5rem]">
+          <div className="sr-only">
+            <DialogTitle>{photo.description || "Photo Preview"}</DialogTitle>
+          </div>
+          <div className="relative aspect-auto h-[85vh] w-full flex items-center justify-center p-4">
+            <Image
+              src={photo.url}
+              alt={photo.description || "Portfolio Photo"}
+              fill
+              className="object-contain rounded-[2rem]"
+            />
+          </div>
+          {photo.description && (
+            <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+              <p className="text-white text-xl font-light tracking-wider text-center">{photo.description}</p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </motion.div>
   );
 }
