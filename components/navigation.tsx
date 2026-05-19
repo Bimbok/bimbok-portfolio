@@ -4,16 +4,19 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect, useRef, useMemo } from "react"
 import { Menu, X } from "lucide-react"
 
+import { useRouter, usePathname } from "next/navigation"
+
 interface NavigationProps {
   darkMode: boolean
 }
 
 const navItems = [
-  { name: "Home", href: "#hero" },
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Projects", href: "#projects" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "/#hero" },
+  { name: "About", href: "/#about" },
+  { name: "Skills", href: "/#skills" },
+  { name: "Projects", href: "/#projects" },
+  { name: "Posts", href: "/posts" },
+  { name: "Contact", href: "/#contact" },
 ]
 const ORB_SIZE = 112
 const ORB_MARGIN = 12
@@ -23,6 +26,8 @@ const MUSIC_STATE_EVENT = "brand-song-state"
 const MUSIC_BPM_EVENT = "brand-song-bpm"
 
 export default function Navigation({ darkMode }: NavigationProps) {
+  const router = useRouter()
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("hero")
   const [scrolled, setScrolled] = useState(false)
@@ -137,7 +142,11 @@ export default function Navigation({ darkMode }: NavigationProps) {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
-      const sections = navItems.map((item) => item.href.substring(1))
+      if (pathname !== "/") return
+
+      const sections = navItems
+        .filter(item => item.href.includes("#"))
+        .map((item) => item.href.split("#")[1])
       const scrollPosition = window.scrollY + 100
 
       for (const section of sections) {
@@ -156,15 +165,21 @@ export default function Navigation({ darkMode }: NavigationProps) {
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [pathname])
 
   const scrollToSection = (href: string) => {
-    const element = document.getElementById(href.substring(1))
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+    if (href.startsWith("/#") && pathname === "/") {
+      const sectionId = href.split("#")[1]
+      const element = document.getElementById(sectionId)
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" })
+      }
+    } else {
+      router.push(href)
     }
     setIsOpen(false)
   }
+
 
   const toggleBrandSong = async () => {
     const audio = audioRef.current

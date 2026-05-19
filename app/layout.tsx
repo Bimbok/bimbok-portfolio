@@ -72,6 +72,8 @@ export const metadata: Metadata = {
   generator: "next.js",
 };
 
+import ClientLayout from "@/components/client-layout"
+
 export default function RootLayout({
   children,
 }: {
@@ -79,7 +81,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${inter.className} antialiased`}>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
+      </body>
     </html>
   )
 }
