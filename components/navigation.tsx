@@ -142,27 +142,33 @@ export default function Navigation({ darkMode }: NavigationProps) {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
+      
+      if (pathname === "/posts") {
+        setActiveSection("posts")
+        return
+      }
+
       if (pathname !== "/") return
 
       const sections = navItems
         .filter(item => item.href.includes("#"))
         .map((item) => item.href.split("#")[1])
-      const scrollPosition = window.scrollY + 100
+      const scrollPosition = window.scrollY + 200
 
+      let currentSection = "hero"
       for (const section of sections) {
         const element = document.getElementById(section)
         if (element) {
           const offsetTop = element.offsetTop
-          const offsetHeight = element.offsetHeight
-
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
+          if (scrollPosition >= offsetTop) {
+            currentSection = section
           }
         }
       }
+      setActiveSection(currentSection)
     }
 
+    handleScroll()
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [pathname])
@@ -178,6 +184,15 @@ export default function Navigation({ darkMode }: NavigationProps) {
       router.push(href)
     }
     setIsOpen(false)
+  }
+
+  const isItemActive = (href: string) => {
+    if (href === "/posts") return pathname === "/posts"
+    if (href.includes("#")) {
+      const sectionId = href.split("#")[1]
+      return activeSection === sectionId && pathname === "/"
+    }
+    return false
   }
 
 
@@ -442,41 +457,66 @@ export default function Navigation({ darkMode }: NavigationProps) {
             </motion.div>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-2">
-              {navItems.map((item) => (
-                <motion.button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`relative px-5 py-2 rounded-full transition-all duration-500 text-sm font-bold tracking-tight ${
-                    activeSection === item.href.substring(1)
-                      ? darkMode ? "text-white" : "text-black"
-                      : darkMode ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="relative z-10">{item.name}</span>
-                  {activeSection === item.href.substring(1) && (
-                    <motion.div
-                      layoutId="activeSection"
-                      className={`absolute inset-0 rounded-full ${
-                        darkMode ? "bg-white/10" : "bg-black/5"
-                      }`}
-                      style={
-                        isPlaying
-                          ? {
-                              boxShadow: darkMode
-                                ? `0 0 ${16 + reactiveStrength * 16}px rgba(236,72,153,${0.22 + reactiveStrength * 0.32}), 0 0 ${24 + reactiveStrength * 22}px rgba(59,130,246,${0.18 + reactiveStrength * 0.26})`
-                                : `0 0 ${10 + reactiveStrength * 12}px rgba(236,72,153,${0.18 + reactiveStrength * 0.2}), 0 0 ${16 + reactiveStrength * 16}px rgba(59,130,246,${0.12 + reactiveStrength * 0.16})`,
-                            }
-                          : undefined
-                      }
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </motion.button>
-              ))}
+            <div className="hidden md:flex items-center space-x-1 p-1">
+              {navItems.map((item) => {
+                const active = isItemActive(item.href)
+                
+                return (
+                  <motion.button
+                    key={item.name}
+                    onClick={() => scrollToSection(item.href)}
+                    className={`relative px-5 py-2.5 rounded-full transition-all duration-500 text-sm font-bold tracking-tight ${
+                      active
+                        ? darkMode ? "text-white" : "text-black"
+                        : darkMode ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black"
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="relative z-10">{item.name}</span>
+                    {active && (
+                      <motion.div
+                        layoutId="activeSection"
+                        className={`absolute inset-0 rounded-full ${
+                          darkMode 
+                            ? "bg-primary/10" 
+                            : "bg-primary/5"
+                        }`}
+                        initial={false}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 400, 
+                          damping: 30,
+                          mass: 1,
+                        }}
+                      >
+                        <motion.div 
+                          layoutId="activeIndicator"
+                          className="absolute inset-0 rounded-full border border-primary/20"
+                          style={
+                            isPlaying
+                              ? {
+                                  boxShadow: darkMode
+                                    ? `0 0 ${16 + reactiveStrength * 16}px rgba(236,72,153,${0.22 + reactiveStrength * 0.32}), 0 0 ${24 + reactiveStrength * 22}px rgba(59,130,246,${0.18 + reactiveStrength * 0.26})`
+                                    : `0 0 ${10 + reactiveStrength * 12}px rgba(236,72,153,${0.18 + reactiveStrength * 0.2}), 0 0 ${16 + reactiveStrength * 16}px rgba(59,130,246,${0.12 + reactiveStrength * 0.16})`,
+                                }
+                              : undefined
+                          }
+                        />
+                        <motion.div 
+                          className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary"
+                          layoutId="activeDot"
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 30
+                          }}
+                        />
+                      </motion.div>
+                    )}
+                  </motion.button>
+                )
+              })}
             </div>
 
             {/* Mobile Nav Toggle */}
@@ -525,7 +565,7 @@ export default function Navigation({ darkMode }: NavigationProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 className={`text-5xl font-black tracking-tighter ${
-                  activeSection === item.href.substring(1)
+                  isItemActive(item.href)
                     ? darkMode ? "text-pink-400" : "text-pink-600"
                     : darkMode ? "text-white/40 hover:text-white" : "text-black/30 hover:text-black"
                 }`}
