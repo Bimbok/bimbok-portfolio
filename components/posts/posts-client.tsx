@@ -55,13 +55,13 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
           <TabsList className="h-14 p-1 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full w-full max-w-[400px]">
             <TabsTrigger 
               value="gallery" 
-              className="rounded-full h-full text-base font-medium data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-500"
+              className="rounded-full h-full text-base font-medium transition-all duration-500 data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-white/60 hover:data-[state=inactive]:text-white"
             >
               Gallery
             </TabsTrigger>
             <TabsTrigger 
               value="blogs" 
-              className="rounded-full h-full text-base font-medium data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-500"
+              className="rounded-full h-full text-base font-medium transition-all duration-500 data-[state=active]:bg-white data-[state=active]:text-black data-[state=inactive]:text-white/60 hover:data-[state=inactive]:text-white"
             >
               Chronicles
             </TabsTrigger>
