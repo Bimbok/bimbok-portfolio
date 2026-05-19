@@ -67,7 +67,7 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: 
       >
         <Button 
           onClick={() => setIsPhotoDialogOpen(true)}
-          className="rounded-full w-14 h-14 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] hover:scale-110 active:scale-95 transition-all duration-300 bg-primary hover:bg-primary/90 text-white border-none"
+          className="rounded-full w-14 h-14 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] hover:scale-110 active:scale-95 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground border-none"
         >
           <ImageIcon className="w-6 h-6" />
         </Button>
