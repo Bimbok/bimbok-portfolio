@@ -9,30 +9,26 @@ const siteUrl = "https://bimbok-portfolio.vercel.app"
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Bratik Mukherjee (Bimbok) | Full Stack Developer Portfolio",
+    default: "Bimbok (Bratik Mukherjee) | Full Stack Developer & Creative Technologist",
     template: "%s | Bimbok Portfolio",
   },
   description:
-    "Official portfolio of Bratik Mukherjee (Bimbok Mukherjee): full stack developer building with MERN, Next.js, React, Node.js, Python, and modern UI systems.",
+    "Explore the digital universe of Bratik Mukherjee (Bimbok). A Full Stack Developer and B.Tech IT student building high-performance web experiences, cinematic chronicles, and innovative software solutions.",
   keywords: [
     "Bratik Mukherjee",
+    "Bimbok",
     "Bimbok Mukherjee",
-    "bimbok",
-    "bratik",
-    "bratik mkj",
-    "bimbok mkj",
-    "Bimbok portfolio",
-    "Bratik portfolio",
-    "full stack developer portfolio",
-    "MERN developer",
-    "Next.js developer",
-    "React developer",
-    "Node.js developer",
-    "Python developer",
-    "web developer Kolkata",
-    "software developer portfolio",
+    "Full Stack Developer",
+    "B.Tech IT Student",
+    "MERN Stack",
+    "Next.js Developer",
+    "Software Engineer Portfolio",
+    "Creative Technologist",
+    "Kolkata Web Developer",
   ],
-  authors: [{ name: "Bimbok" }],
+  authors: [{ name: "Bratik Mukherjee", url: siteUrl }],
+  creator: "Bratik Mukherjee (Bimbok)",
+  publisher: "Bratik Mukherjee",
   verification: {
     google: "gFurputTJW0d-GTnJHv-VcLR0X_g7NSB-N2VV71rMno",
   },
@@ -40,36 +36,45 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Bratik Mukherjee (Bimbok) | Full Stack Developer Portfolio",
+    title: "Bimbok (Bratik Mukherjee) | Portfolio",
     description:
-      "Explore the portfolio of Bratik Mukherjee (Bimbok): projects, skills, and full stack development work.",
+      "Full Stack Developer crafting cinematic web experiences and modern software solutions. Dive into my projects, skills, and journey.",
     url: siteUrl,
     siteName: "Bimbok Portfolio",
     type: "website",
     images: [
       {
-        url: "/placeholder-logo.png",
-        width: 512,
-        height: 512,
-        alt: "Bimbok Portfolio Logo",
+        url: "/bimbok.png",
+        width: 1200,
+        height: 630,
+        alt: "Bratik Mukherjee (Bimbok) - Full Stack Developer",
       },
     ],
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bratik Mukherjee (Bimbok) | Full Stack Developer",
+    title: "Bimbok (Bratik Mukherjee) | Full Stack Developer",
     description:
-      "Portfolio, projects, and technical work by Bratik Mukherjee (Bimbok).",
-    images: ["/placeholder-logo.png"],
+      "Crafting high-performance web experiences and cinematic chronicles. Explore my work and journey.",
+    images: ["/bimbok.png"],
+    creator: "@bimbok_mkj", // Placeholder - replace with your actual X handle if different
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   icons: {
     icon: "/favicon.ico",
   },
-  generator: "next.js",
+  generator: "Next.js 15",
 };
 
 import ClientLayout from "@/components/client-layout"
