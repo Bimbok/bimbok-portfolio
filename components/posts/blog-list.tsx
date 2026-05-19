@@ -21,6 +21,33 @@ export default function BlogList({ posts }: BlogListProps) {
 
   return (
     <div className="max-w-5xl mx-auto py-12 px-4 space-y-12">
+      {/* Structured Data for Google Search */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Blog",
+            "name": "Bimbok's Chronicles",
+            "author": {
+              "@type": "Person",
+              "name": "Bratik Mukherjee",
+              "alternateName": "Bimbok"
+            },
+            "blogPost": posts.map((post) => ({
+              "@type": "BlogPosting",
+              "headline": post.title,
+              "datePublished": post.createdAt,
+              "author": {
+                "@type": "Person",
+                "name": "Bratik Mukherjee",
+                "alternateName": "Bimbok"
+              },
+              "description": post.content.substring(0, 160)
+            }))
+          })
+        }}
+      />
       {posts.map((post, index) => (
         <motion.div
           key={post._id || post.id}

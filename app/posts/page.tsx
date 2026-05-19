@@ -4,8 +4,9 @@ import { getPostsAction } from "@/actions/posts";
 import PostsClient from "@/components/posts/posts-client";
 
 export const metadata = {
-  title: "Posts & Gallery | Bratik Mukherjee",
-  description: "Chronicles and snapshots from my journey.",
+  title: "Bimbok's Chronicles & Snapshots | Bratik Mukherjee",
+  description: "Explore the visual journey and personal chronicles of Bratik Mukherjee (Bimbok). Featuring professional photography, life snapshots, and stories lived.",
+  keywords: ["Bimbok", "Bratik Mukherjee", "Bimbok Photos", "Bratik Mukherjee Gallery", "Full Stack Developer", "Personal Blog"],
 };
 
 export default async function PostsPage() {

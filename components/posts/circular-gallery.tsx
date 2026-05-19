@@ -65,6 +65,32 @@ export default function CircularGallery({
 
   return (
     <div className="relative py-24 overflow-hidden" ref={containerRef}>
+      {/* Structured Data for Google Image Search */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org/",
+            "@type": "ItemList",
+            "itemListElement": photos.map((photo, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "item": {
+                "@type": "ImageObject",
+                "url": photo.url,
+                "name": photo.description || `Photo by Bimbok (Bratik Mukherjee) - ${index + 1}`,
+                "author": {
+                  "@type": "Person",
+                  "name": "Bratik Mukherjee",
+                  "alternateName": "Bimbok"
+                },
+                "contentUrl": photo.url,
+                "description": photo.description || "Portfolio photograph by Bratik Mukherjee"
+              }
+            }))
+          })
+        }}
+      />
       <div className="flex flex-wrap justify-center gap-8 px-4 max-w-7xl mx-auto">
         {photos.map((photo, index) => {
           const rotationBase = (index % 3 - 1) * 5 * bend;
