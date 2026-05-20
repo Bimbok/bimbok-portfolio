@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Image as ImageIcon, FileText, LogOut, Loader2, X } from "lucide-react";
+import { Plus, Image as ImageIcon, FileText, LogOut, Loader2, X, FileUp } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { uploadPhotoAction } from "@/actions/photos";
 import { createPostAction } from "@/actions/posts";
+import { uploadResumeAction } from "@/actions/resumes";
 import { logoutAction } from "@/actions/auth";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,11 +18,13 @@ interface AdminControlsProps {
   isAdmin: boolean;
   onPhotoUpload: (photo: any) => void;
   onPostCreate: (post: any) => void;
+  onResumeUpload: (resume: any) => void;
 }
 
-export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: AdminControlsProps) {
+export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate, onResumeUpload }: AdminControlsProps) {
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
   const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
+  const [isResumeDialogOpen, setIsResumeDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isAdmin) return null;
@@ -58,6 +61,22 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: 
     }
   }
 
+  async function handleResumeSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const result = await uploadResumeAction(formData);
+    setIsLoading(false);
+    
+    if (result.success) {
+      toast.success("Resume uploaded!");
+      onResumeUpload(result.resume);
+      setIsResumeDialogOpen(false);
+    } else {
+      toast.error(result.error || "Upload failed");
+    }
+  }
+
   return (
     <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
       <motion.div
@@ -76,6 +95,12 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: 
           className="rounded-full w-14 h-14 shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)] hover:scale-110 active:scale-95 transition-all duration-300 bg-secondary/80 backdrop-blur-xl border border-border hover:bg-secondary text-foreground"
         >
           <FileText className="w-6 h-6" />
+        </Button>
+        <Button 
+          onClick={() => setIsResumeDialogOpen(true)}
+          className="rounded-full w-14 h-14 shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)] hover:scale-110 active:scale-95 transition-all duration-300 bg-secondary/80 backdrop-blur-xl border border-border hover:bg-secondary text-foreground"
+        >
+          <FileUp className="w-6 h-6" />
         </Button>
         <Button 
           onClick={() => logoutAction()}
@@ -156,6 +181,43 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate }: 
             <Button type="submit" className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xl tracking-tight shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)] transition-all" disabled={isLoading}>
               {isLoading ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : null}
               {isLoading ? "Publishing..." : "Publish Chronicle"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Resume Upload Dialog */}
+      <Dialog open={isResumeDialogOpen} onOpenChange={setIsResumeDialogOpen}>
+        <DialogContent className="sm:max-w-[450px] bg-background/80 backdrop-blur-2xl border-border rounded-[2rem] p-8 shadow-2xl">
+          <DialogHeader className="mb-6">
+            <DialogTitle className="text-3xl font-black tracking-tighter text-foreground">Upload Resume</DialogTitle>
+            <DialogDescription className="text-muted-foreground font-light">Add a new PDF resume to your collection.</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleResumeSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="resume-file" className="text-sm font-medium text-foreground/80 ml-1">PDF File</Label>
+              <Input 
+                id="resume-file" 
+                name="file" 
+                type="file" 
+                accept=".pdf" 
+                required 
+                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80 transition-all cursor-pointer"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="resume-name" className="text-sm font-medium text-foreground/80 ml-1">Version Name</Label>
+              <Input 
+                id="resume-name" 
+                name="name" 
+                placeholder="e.g., Software Engineer - May 2026" 
+                required
+                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary placeholder:text-muted-foreground/50"
+              />
+            </div>
+            <Button type="submit" className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] transition-all" disabled={isLoading}>
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
+              {isLoading ? "Uploading..." : "Upload Resume"}
             </Button>
           </form>
         </DialogContent>

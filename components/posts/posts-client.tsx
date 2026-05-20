@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CircularGallery from "./circular-gallery";
 import BlogList from "./blog-list";
+import ResumeList from "./resume-list";
 import AdminControls from "./admin-controls";
 import { Button } from "@/components/ui/button";
 import { Lock } from "lucide-react";
@@ -13,12 +14,14 @@ import AdminLoginDialog from "./admin-login-dialog";
 interface PostsClientProps {
   initialPhotos: any[];
   initialPosts: any[];
+  initialResumes: any[];
   isAdmin: boolean;
 }
 
-export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: PostsClientProps) {
+export default function PostsClient({ initialPhotos, initialPosts, initialResumes, isAdmin }: PostsClientProps) {
   const [photos, setPhotos] = useState(initialPhotos);
   const [posts, setPosts] = useState(initialPosts);
+  const [resumes, setResumes] = useState(initialResumes);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
@@ -52,7 +55,7 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
 
       <Tabs defaultValue="gallery" className="w-full">
         <div className="flex justify-center mb-10 md:mb-16 px-4">
-          <TabsList className="h-12 md:h-14 p-1 bg-muted/50 backdrop-blur-2xl border border-border rounded-full w-full max-w-[320px] md:max-w-[400px]">
+          <TabsList className="h-12 md:h-14 p-1 bg-muted/50 backdrop-blur-2xl border border-border rounded-full w-full max-w-[480px]">
             <TabsTrigger 
               value="gallery" 
               className="rounded-full h-full text-sm md:text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
@@ -64,6 +67,12 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
               className="rounded-full h-full text-sm md:text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
             >
               Chronicles
+            </TabsTrigger>
+            <TabsTrigger 
+              value="resume" 
+              className="rounded-full h-full text-sm md:text-base font-medium transition-all duration-500 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=inactive]:text-muted-foreground hover:data-[state=inactive]:text-foreground shadow-sm"
+            >
+              Resume
             </TabsTrigger>
           </TabsList>
         </div>
@@ -80,6 +89,13 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
         <TabsContent value="blogs" className="mt-0 outline-none">
           <BlogList posts={posts} />
         </TabsContent>
+        <TabsContent value="resume" className="mt-0 outline-none">
+          <ResumeList 
+            resumes={resumes} 
+            isAdmin={isAdmin} 
+            onUpdate={setResumes}
+          />
+        </TabsContent>
       </Tabs>
 
       {/* Admin Section */}
@@ -87,6 +103,7 @@ export default function PostsClient({ initialPhotos, initialPosts, isAdmin }: Po
         isAdmin={isAdmin} 
         onPhotoUpload={(newPhoto) => setPhotos([newPhoto, ...photos])}
         onPostCreate={(newPost) => setPosts([newPost, ...posts])}
+        onResumeUpload={(newResume) => setResumes([newResume, ...resumes])}
       />
 
       {/* Hidden Admin Trigger */}

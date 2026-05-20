@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { getPhotosAction } from "@/actions/photos";
 import { getPostsAction } from "@/actions/posts";
+import { getResumesAction } from "@/actions/resumes";
 import PostsClient from "@/components/posts/posts-client";
 
 export const metadata = {
@@ -13,9 +14,10 @@ export default async function PostsPage() {
   const session = await getSession();
   const isAdmin = !!session;
   
-  const [photos, posts] = await Promise.all([
+  const [photos, posts, resumes] = await Promise.all([
     getPhotosAction(),
     getPostsAction(),
+    getResumesAction(),
   ]);
 
   return (
@@ -23,6 +25,7 @@ export default async function PostsPage() {
       <PostsClient 
         initialPhotos={photos} 
         initialPosts={posts} 
+        initialResumes={resumes}
         isAdmin={isAdmin} 
       />
     </main>

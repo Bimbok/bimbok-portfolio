@@ -1,0 +1,177 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { 
+  FileText, 
+  Download, 
+  Trash2, 
+  CheckCircle2, 
+  Circle,
+  ExternalLink,
+  Eye,
+  Loader2
+} from "lucide-react";
+import { deleteResumeAction, setActiveResumeAction } from "@/actions/resumes";
+import { toast } from "sonner";
+
+interface ResumeListProps {
+  resumes: any[];
+  isAdmin: boolean;
+  onUpdate: (newResumes: any[]) => void;
+}
+
+export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListProps) {
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  
+  const activeResume = resumes.find(r => r.isActive);
+  const displayResumes = isAdmin ? resumes : (activeResume ? [activeResume] : []);
+
+  async function handleDelete(id: string, publicId: string) {
+    if (!confirm("Are you sure you want to delete this resume?")) return;
+    
+    setLoadingId(id);
+    const result = await deleteResumeAction(id, publicId);
+    setLoadingId(null);
+    
+    if (result.success) {
+      toast.success("Resume deleted");
+      onUpdate(resumes.filter(r => (r._id || r.id) !== id));
+    } else {
+      toast.error(result.error);
+    }
+  }
+
+  async function handleSetActive(id: string) {
+    setLoadingId(id);
+    const result = await setActiveResumeAction(id);
+    setLoadingId(null);
+    
+    if (result.success) {
+      toast.success("Active resume updated");
+      onUpdate(resumes.map(r => ({
+        ...r,
+        isActive: (r._id || r.id) === id
+      })));
+    } else {
+      toast.error(result.error);
+    }
+  }
+
+  if (displayResumes.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-border rounded-[2rem] bg-muted/30 backdrop-blur-md">
+        <p className="text-xl font-light">No resumes available yet.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-5xl mx-auto py-8 md:py-12 px-4 space-y-8">
+      {isAdmin && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {resumes.map((resume) => (
+            <motion.div
+              key={resume._id || resume.id}
+              layout
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
+              <Card className={`relative overflow-hidden bg-secondary/20 backdrop-blur-xl border-2 transition-all duration-500 rounded-[1.5rem] ${
+                resume.isActive ? "border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" : "border-border"
+              }`}>
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`p-3 rounded-xl ${resume.isActive ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
+                        <FileText className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg truncate max-w-[150px] sm:max-w-[200px]">{resume.name}</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(resume.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => handleSetActive(resume._id || resume.id)}
+                        disabled={loadingId === (resume._id || resume.id) || resume.isActive}
+                        className={resume.isActive ? "text-primary" : "text-muted-foreground hover:text-primary"}
+                      >
+                        {resume.isActive ? <CheckCircle2 className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        asChild
+                      >
+                        <a href={resume.url} target="_blank" rel="noopener noreferrer">
+                          <Download className="w-5 h-5" />
+                        </a>
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => handleDelete(resume._id || resume.id, resume.publicId)}
+                        disabled={loadingId === (resume._id || resume.id)}
+                      >
+                        {loadingId === (resume._id || resume.id) ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-5 h-5" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {/* Primary View (Active for viewers, focus for admin) */}
+      <AnimatePresence mode="wait">
+        {activeResume && (
+          <motion.div
+            key="active-view"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="w-full h-[80vh] bg-secondary/10 backdrop-blur-xl border border-border rounded-[2rem] overflow-hidden relative"
+          >
+            {/* Protective Overlay to discourage download (doesn't prevent savvy users) */}
+            {!isAdmin && (
+              <div 
+                className="absolute inset-0 z-10 pointer-events-none select-none" 
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            )}
+            
+            <iframe
+              src={`${activeResume.url}#toolbar=0&navpanes=0&scrollbar=1`}
+              className="w-full h-full border-none"
+              title="Resume Preview"
+              onContextMenu={(e) => e.preventDefault()}
+            />
+            
+            {!isAdmin && (
+              <div className="absolute top-4 right-4 z-20 pointer-events-none">
+                <div className="bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] text-white/60 uppercase tracking-widest font-black">
+                  Protected View
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
