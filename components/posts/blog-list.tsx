@@ -1,10 +1,19 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, ArrowRight, Clock } from "lucide-react";
+import { Calendar, ArrowRight, Clock, X } from "lucide-react";
 import { format } from "date-fns";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger,
+  DialogDescription 
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface BlogListProps {
   posts: any[];
@@ -77,14 +86,59 @@ export default function BlogList({ posts }: BlogListProps) {
                 <p className="text-muted-foreground text-base md:text-xl line-clamp-3 mb-8 md:mb-10 leading-relaxed font-light">
                   {post.content}
                 </p>
-                <motion.div 
-                  whileHover={{ x: 10 }}
-                  className="inline-flex items-center gap-3 text-primary font-bold text-base md:text-lg cursor-pointer group/link tracking-tight"
-                >
-                  READ STORY
-                  <div className="w-8 md:w-12 h-[2px] bg-primary/30 group-hover/link:w-16 transition-all duration-500" />
-                  <ArrowRight className="w-4 h-4 md:w-5 h-5 transition-transform group-hover/link:translate-x-1" />
-                </motion.div>
+                
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <motion.div 
+                      whileHover={{ x: 10 }}
+                      className="inline-flex items-center gap-3 text-primary font-bold text-base md:text-lg cursor-pointer group/link tracking-tight"
+                    >
+                      READ STORY
+                      <div className="w-8 md:w-12 h-[2px] bg-primary/30 group-hover/link:w-16 transition-all duration-500" />
+                      <ArrowRight className="w-4 h-4 md:w-5 h-5 transition-transform group-hover/link:translate-x-1" />
+                    </motion.div>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-0 overflow-hidden bg-background/80 backdrop-blur-3xl border border-border rounded-[2rem] sm:rounded-[3rem] shadow-2xl">
+                    <ScrollArea className="h-full max-h-[90vh]">
+                      <div className="p-8 md:p-16">
+                        <DialogHeader className="mb-12">
+                          <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-6 font-light tracking-widest uppercase">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="w-4 h-4 text-primary" />
+                              {format(new Date(post.createdAt), "MMMM dd, yyyy")}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-primary" />
+                              {Math.ceil(post.content.split(' ').length / 200)} min read
+                            </div>
+                          </div>
+                          <DialogTitle className="text-4xl md:text-6xl font-black leading-tight tracking-tighter text-foreground mb-4">
+                            {post.title}
+                          </DialogTitle>
+                          <DialogDescription className="sr-only">
+                            Read the full chronicle: {post.title}
+                          </DialogDescription>
+                          <div className="w-24 h-1.5 bg-gradient-to-r from-primary to-purple-500 rounded-full" />
+                        </DialogHeader>
+                        
+                        <div className="prose prose-invert max-w-none">
+                          <p className="text-muted-foreground text-lg md:text-2xl leading-relaxed font-light whitespace-pre-wrap">
+                            {post.content}
+                          </p>
+                        </div>
+
+                        <div className="mt-16 pt-8 border-t border-border flex items-center justify-between">
+                          <div className="text-sm font-bold tracking-widest text-primary uppercase">
+                            End of Chronicle
+                          </div>
+                          <div className="text-muted-foreground font-light italic">
+                            — Bratik Mukherjee
+                          </div>
+                        </div>
+                      </div>
+                    </ScrollArea>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </div>
             
