@@ -59,7 +59,7 @@ export default function CircularGallery({
     return (
       <div 
         ref={containerRef}
-        className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-border rounded-[2rem] bg-muted/30 backdrop-blur-md"
+        className="relative flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-border rounded-[2rem] bg-muted/30 backdrop-blur-md"
       >
         <p className="text-xl font-light">The gallery is waiting for its first snapshot.</p>
       </div>
@@ -179,6 +179,7 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                 sizes="(max-width: 640px) 320px, 256px"
+                priority={index < 2}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
                 <motion.p 

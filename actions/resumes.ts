@@ -27,7 +27,7 @@ export async function uploadResumeAction(formData: FormData) {
       cloudinary.uploader.upload_stream(
         { 
           folder: "portfolio_resumes",
-          resource_type: "raw", // For PDF files
+          resource_type: "image", // Using image type for PDFs allows better delivery/preview
           format: "pdf"
         },
         (error, result) => {
@@ -65,7 +65,7 @@ export async function deleteResumeAction(id: string, publicId: string) {
   }
 
   try {
-    await cloudinary.uploader.destroy(publicId, { resource_type: "raw" });
+    await cloudinary.uploader.destroy(publicId, { resource_type: "image" });
     await dbConnect();
     await Resume.findByIdAndDelete(id);
     revalidatePath("/posts");

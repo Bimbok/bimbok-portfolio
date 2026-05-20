@@ -245,9 +245,8 @@ export default function DevMascot({
           fill
           sizes="68px"
           className="object-contain drop-shadow-[0_10px_16px_rgba(0,0,0,0.35)]"
-          priority={false}
-        />
-      </motion.button>
+          priority
+        />      </motion.button>
     </motion.div>
   );
 }
