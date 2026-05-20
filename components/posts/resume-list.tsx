@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
   FileText, 
@@ -10,8 +10,6 @@ import {
   Trash2, 
   CheckCircle2, 
   Circle,
-  ExternalLink,
-  Eye,
   Loader2
 } from "lucide-react";
 import { deleteResumeAction, setActiveResumeAction } from "@/actions/resumes";
@@ -23,21 +21,38 @@ interface ResumeListProps {
   onUpdate: (newResumes: any[]) => void;
 }
 
+/**
+ * Converts a Google Drive share link to a preview/embed link.
+ */
+function getGDrivePreviewUrl(url: string) {
+  try {
+    // Handle standard view links
+    // https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+    const match = url.match(/\/file\/d\/([^/]+)/);
+    if (match && match[1]) {
+      return `https://drive.google.com/file/d/${match[1]}/preview`;
+    }
+    return url;
+  } catch {
+    return url;
+  }
+}
+
 export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   
   const activeResume = resumes.find(r => r.isActive);
   const displayResumes = isAdmin ? resumes : (activeResume ? [activeResume] : []);
 
-  async function handleDelete(id: string, publicId: string) {
-    if (!confirm("Are you sure you want to delete this resume?")) return;
+  async function handleDelete(id: string) {
+    if (!confirm("Are you sure you want to remove this resume link?")) return;
     
     setLoadingId(id);
-    const result = await deleteResumeAction(id, publicId);
+    const result = await deleteResumeAction(id);
     setLoadingId(null);
     
     if (result.success) {
-      toast.success("Resume deleted");
+      toast.success("Resume link removed");
       onUpdate(resumes.filter(r => (r._id || r.id) !== id));
     } else {
       toast.error(result.error);
@@ -119,7 +134,7 @@ export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListPro
                         size="icon"
                         variant="ghost"
                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => handleDelete(resume._id || resume.id, resume.publicId)}
+                        onClick={() => handleDelete(resume._id || resume.id)}
                         disabled={loadingId === (resume._id || resume.id)}
                       >
                         {loadingId === (resume._id || resume.id) ? (
@@ -156,10 +171,11 @@ export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListPro
             )}
             
             <iframe
-              src={`${activeResume.url}#toolbar=0&navpanes=0&scrollbar=1`}
+              src={getGDrivePreviewUrl(activeResume.url)}
               className="w-full h-full border-none"
               title="Resume Preview"
               onContextMenu={(e) => e.preventDefault()}
+              allow="autoplay"
             />
             
             {!isAdmin && (

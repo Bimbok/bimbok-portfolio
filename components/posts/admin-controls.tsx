@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { uploadPhotoAction } from "@/actions/photos";
 import { createPostAction } from "@/actions/posts";
-import { uploadResumeAction } from "@/actions/resumes";
+import { addResumeAction } from "@/actions/resumes";
 import { logoutAction } from "@/actions/auth";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -65,15 +65,15 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate, on
     e.preventDefault();
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
-    const result = await uploadResumeAction(formData);
+    const result = await addResumeAction(formData);
     setIsLoading(false);
     
     if (result.success) {
-      toast.success("Resume uploaded!");
+      toast.success("Resume link added!");
       onResumeUpload(result.resume);
       setIsResumeDialogOpen(false);
     } else {
-      toast.error(result.error || "Upload failed");
+      toast.error(result.error || "Failed to add link");
     }
   }
 
@@ -186,23 +186,23 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate, on
         </DialogContent>
       </Dialog>
 
-      {/* Resume Upload Dialog */}
+      {/* Resume Link Dialog */}
       <Dialog open={isResumeDialogOpen} onOpenChange={setIsResumeDialogOpen}>
         <DialogContent className="sm:max-w-[450px] bg-background/80 backdrop-blur-2xl border-border rounded-[2rem] p-8 shadow-2xl">
           <DialogHeader className="mb-6">
-            <DialogTitle className="text-3xl font-black tracking-tighter text-foreground">Upload Resume</DialogTitle>
-            <DialogDescription className="text-muted-foreground font-light">Add a new PDF resume to your collection.</DialogDescription>
+            <DialogTitle className="text-3xl font-black tracking-tighter text-foreground">Add Resume Link</DialogTitle>
+            <DialogDescription className="text-muted-foreground font-light">Paste a public Google Drive share link for your resume.</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleResumeSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="resume-file" className="text-sm font-medium text-foreground/80 ml-1">PDF File</Label>
+              <Label htmlFor="resume-url" className="text-sm font-medium text-foreground/80 ml-1">Google Drive Link</Label>
               <Input 
-                id="resume-file" 
-                name="file" 
-                type="file" 
-                accept=".pdf" 
+                id="resume-url" 
+                name="url" 
+                type="url" 
+                placeholder="https://drive.google.com/file/d/.../view" 
                 required 
-                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/80 transition-all cursor-pointer"
+                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary placeholder:text-muted-foreground/30 px-4"
               />
             </div>
             <div className="space-y-2">
@@ -212,12 +212,12 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate, on
                 name="name" 
                 placeholder="e.g., Software Engineer - May 2026" 
                 required
-                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary placeholder:text-muted-foreground/50"
+                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary placeholder:text-muted-foreground/50 px-4"
               />
             </div>
             <Button type="submit" className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] transition-all" disabled={isLoading}>
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-              {isLoading ? "Uploading..." : "Upload Resume"}
+              {isLoading ? "Adding..." : "Add Resume"}
             </Button>
           </form>
         </DialogContent>
