@@ -5,6 +5,7 @@ import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
 const siteUrl = "https://bimbok-portfolio.vercel.app"
+const previewImageUrl = `${siteUrl}/og-image.png`
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/bimbok.png",
+        url: previewImageUrl,
         width: 1200,
         height: 630,
         alt: "Bratik Mukherjee (Bimbok) - Full Stack Developer",
@@ -57,7 +58,7 @@ export const metadata: Metadata = {
     title: "Bimbok (Bratik Mukherjee) | Full Stack Developer",
     description:
       "Crafting high-performance web experiences and cinematic chronicles. Explore my work and journey.",
-    images: ["/bimbok.png"],
+    images: [previewImageUrl],
     creator: "@bimbok_mkj", // Placeholder - replace with your actual X handle if different
   },
   robots: {
