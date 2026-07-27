@@ -169,12 +169,21 @@ export default function AdminControls({ isAdmin, onPhotoUpload, onPostCreate, on
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="content" className="text-base font-medium text-foreground/80 ml-1">Content</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="content" className="text-base font-medium text-foreground/80 ml-1">Content (Markdown Supported)</Label>
+              </div>
+              <div className="text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 bg-secondary/30 p-3 rounded-xl border border-border/50 font-mono">
+                <span><strong className="text-primary">```js</strong> code block</span>
+                <span><strong className="text-primary">`code`</strong> inline</span>
+                <span><strong className="text-primary">- item</strong> bullets</span>
+                <span><strong className="text-primary">[text](url)</strong> links</span>
+                <span><strong className="text-primary">[^1]</strong> footnotes</span>
+              </div>
               <Textarea 
                 id="content" 
                 name="content" 
-                placeholder="Dive into the details..." 
-                className="min-h-[300px] bg-secondary/20 border-border text-foreground rounded-2xl p-6 text-lg font-light leading-relaxed focus:ring-primary focus:border-primary placeholder:text-muted-foreground/30 resize-none"
+                placeholder="Write your story using markdown..." 
+                className="min-h-[300px] bg-secondary/20 border-border text-foreground rounded-2xl p-6 text-lg font-light leading-relaxed focus:ring-primary focus:border-primary placeholder:text-muted-foreground/30 resize-none font-mono"
                 required 
               />
             </div>

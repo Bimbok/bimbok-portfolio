@@ -15,8 +15,21 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+import ChronicleReader from "./chronicle-reader";
+
 interface BlogListProps {
   posts: any[];
+}
+
+function getCleanPreview(content: string) {
+  if (!content) return "";
+  return content
+    .replace(/```[\s\S]*?```/g, "[Code Snippet]")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/[*#_>~-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export default function BlogList({ posts }: BlogListProps) {
@@ -52,7 +65,7 @@ export default function BlogList({ posts }: BlogListProps) {
                 "name": "Bratik Mukherjee",
                 "alternateName": "Bimbok"
               },
-              "description": post.content.substring(0, 160)
+              "description": getCleanPreview(post.content).substring(0, 160)
             }))
           })
         }}
@@ -84,7 +97,7 @@ export default function BlogList({ posts }: BlogListProps) {
               
               <CardContent className="p-0">
                 <p className="text-muted-foreground text-base md:text-xl line-clamp-3 mb-8 md:mb-10 leading-relaxed font-light">
-                  {post.content}
+                  {getCleanPreview(post.content)}
                 </p>
                 
                 <Dialog>
@@ -98,10 +111,10 @@ export default function BlogList({ posts }: BlogListProps) {
                       <ArrowRight className="w-4 h-4 md:w-5 h-5 transition-transform group-hover/link:translate-x-1" />
                     </motion.div>
                   </DialogTrigger>
-                  <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-0 overflow-hidden bg-background/80 backdrop-blur-3xl border border-border rounded-[2rem] sm:rounded-[3rem] shadow-2xl">
+                  <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-0 overflow-hidden bg-background/90 backdrop-blur-3xl border border-border rounded-[2rem] sm:rounded-[3rem] shadow-2xl">
                     <ScrollArea className="h-full max-h-[90vh]">
-                      <div className="p-8 md:p-16">
-                        <DialogHeader className="mb-12">
+                      <div className="p-6 sm:p-10 md:p-16">
+                        <DialogHeader className="mb-8 md:mb-12">
                           <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-6 font-light tracking-widest uppercase">
                             <div className="flex items-center gap-2">
                               <Calendar className="w-4 h-4 text-primary" />
@@ -112,7 +125,7 @@ export default function BlogList({ posts }: BlogListProps) {
                               {Math.ceil(post.content.split(' ').length / 200)} min read
                             </div>
                           </div>
-                          <DialogTitle className="text-4xl md:text-6xl font-black leading-tight tracking-tighter text-foreground mb-4">
+                          <DialogTitle className="text-3xl sm:text-4xl md:text-6xl font-black leading-tight tracking-tighter text-foreground mb-4">
                             {post.title}
                           </DialogTitle>
                           <DialogDescription className="sr-only">
@@ -121,11 +134,7 @@ export default function BlogList({ posts }: BlogListProps) {
                           <div className="w-24 h-1.5 bg-gradient-to-r from-primary to-purple-500 rounded-full" />
                         </DialogHeader>
                         
-                        <div className="prose prose-invert max-w-none">
-                          <p className="text-muted-foreground text-lg md:text-2xl leading-relaxed font-light whitespace-pre-wrap">
-                            {post.content}
-                          </p>
-                        </div>
+                        <ChronicleReader content={post.content} title={post.title} />
 
                         <div className="mt-16 pt-8 border-t border-border flex items-center justify-between">
                           <div className="text-sm font-bold tracking-widest text-primary uppercase">

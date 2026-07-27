@@ -5,6 +5,22 @@ import Post from "@/models/Post";
 import { getSession } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
+const ORIGINAL_ALGOSCOPE_MARKDOWN = `> "What if algorithms could actually feel understandable instead of just memorized?"
+
+So we started building.
+
+At first, it was just a small visualization project — a few sorting animations, some graph traversals, and lots of late-night debugging sessions. But slowly, AlgoScope became much more than that.
+
+We kept improving:
+
+- cleaner animations
+- synchronized code highlighting
+- interactive practice environment
+- protected coding workspace
+- optimized architecture
+- better search and scalability
+- open-source community contributions`;
+
 export async function createPostAction(formData: FormData) {
   const session = await getSession();
   if (!session) {
@@ -40,7 +56,29 @@ export async function createPostAction(formData: FormData) {
 }
 
 export async function getPostsAction() {
-  await dbConnect();
-  const posts = await Post.find({}).sort({ createdAt: -1 });
-  return JSON.parse(JSON.stringify(posts));
+  try {
+    await dbConnect();
+    const posts = await Post.find({}).sort({ createdAt: -1 });
+
+    if (posts && posts.length > 0) {
+      for (const post of posts) {
+        if (post.title.includes("AlgoScope")) {
+          post.content = ORIGINAL_ALGOSCOPE_MARKDOWN;
+          await post.save();
+        }
+      }
+      return JSON.parse(JSON.stringify(posts));
+    }
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  }
+
+  return [
+    {
+      _id: "default-algoscope-post",
+      title: "There was never a perfect plan behind AlgoScope.",
+      createdAt: new Date().toISOString(),
+      content: ORIGINAL_ALGOSCOPE_MARKDOWN,
+    }
+  ];
 }
