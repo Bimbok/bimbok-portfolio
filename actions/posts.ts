@@ -82,3 +82,20 @@ export async function getPostsAction() {
     }
   ];
 }
+
+export async function deletePostAction(id: string) {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    await dbConnect();
+    await Post.findByIdAndDelete(id);
+    revalidatePath("/posts");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Post deletion error:", error);
+    return { success: false, error: error.message || "Failed to delete post" };
+  }
+}

@@ -84,10 +84,16 @@ export default function PostsClient({ initialPhotos, initialPosts, initialResume
             borderRadius={0.05}
             scrollSpeed={2}
             scrollEase={0.05}
+            isAdmin={isAdmin}
+            onDelete={(photoId) => setPhotos(photos.filter(p => (p._id || p.id) !== photoId))}
           />
         </TabsContent>
         <TabsContent value="blogs" className="mt-0 outline-none">
-          <BlogList posts={posts} />
+          <BlogList 
+            posts={posts} 
+            isAdmin={isAdmin}
+            onDelete={(postId) => setPosts(posts.filter(p => (p._id || p.id) !== postId))}
+          />
         </TabsContent>
         <TabsContent value="resume" className="mt-0 outline-none">
           <ResumeList 

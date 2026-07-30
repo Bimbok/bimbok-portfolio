@@ -53,3 +53,36 @@ export async function getPhotosAction() {
   const photos = await Photo.find({}).sort({ createdAt: -1 });
   return JSON.parse(JSON.stringify(photos));
 }
+
+export async function deletePhotoAction(id: string) {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    await dbConnect();
+    const photo = await Photo.findById(id);
+    if (!photo) {
+      return { success: false, error: "Photo not found" };
+    }
+
+    // Delete from Cloudinary if publicId exists
+    if (photo.publicId) {
+      try {
+        await cloudinary.uploader.destroy(photo.publicId);
+      } catch (cloudErr) {
+        console.error("Cloudinary deletion warning:", cloudErr);
+      }
+    }
+
+    // Delete from MongoDB
+    await Photo.findByIdAndDelete(id);
+
+    revalidatePath("/posts");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Photo deletion error:", error);
+    return { success: false, error: error.message || "Photo deletion failed" };
+  }
+}

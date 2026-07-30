@@ -12,6 +12,9 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
+import { Trash2, Loader2 } from "lucide-react";
+import { deletePhotoAction } from "@/actions/photos";
+import { toast } from "sonner";
 
 interface CircularGalleryProps {
   photos: any[];
@@ -20,6 +23,8 @@ interface CircularGalleryProps {
   borderRadius?: number;
   scrollSpeed?: number;
   scrollEase?: number;
+  isAdmin?: boolean;
+  onDelete?: (photoId: string) => void;
 }
 
 export default function CircularGallery({
@@ -29,6 +34,8 @@ export default function CircularGallery({
   borderRadius = 0.05,
   scrollSpeed = 2,
   scrollEase = 0.05,
+  isAdmin = false,
+  onDelete,
 }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [windowWidth, setWindowWidth] = useState(0);
@@ -107,6 +114,8 @@ export default function CircularGallery({
               borderRadius={borderRadius}
               rotationBase={rotationBase}
               velocityFactor={velocityFactor}
+              isAdmin={isAdmin}
+              onDelete={onDelete}
             />
           );
         })}
@@ -119,9 +128,10 @@ export default function CircularGallery({
   );
 }
 
-function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityFactor }: any) {
+function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityFactor, isAdmin, onDelete }: any) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
@@ -144,6 +154,25 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
     y.set(0);
   };
 
+  async function handleDeletePhoto(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!confirm("Are you sure you want to delete this photo from Cloudinary and database?")) return;
+
+    setIsDeleting(true);
+    const photoId = photo._id || photo.id;
+    const result = await deletePhotoAction(photoId);
+    setIsDeleting(false);
+
+    if (result.success) {
+      toast.success("Photo removed from Cloudinary & database");
+      if (onDelete) onDelete(photoId);
+    } else {
+      toast.error(result.error || "Failed to delete photo");
+    }
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -154,8 +183,25 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
         delay: index * 0.05,
         ease: [0.16, 1, 0.3, 1]
       }}
-      className="perspective-1000"
+      className="perspective-1000 relative group/wrapper"
     >
+      {/* Admin Delete Button */}
+      {isAdmin && (
+        <button
+          type="button"
+          onClick={handleDeletePhoto}
+          disabled={isDeleting}
+          className="absolute -top-2 -right-2 z-40 p-2.5 rounded-full bg-red-600/90 hover:bg-red-600 text-white backdrop-blur-md shadow-xl transition-all hover:scale-110 active:scale-95 border border-white/20"
+          title="Delete Photo from Cloudinary & Database"
+        >
+          {isDeleting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Trash2 className="w-4 h-4" />
+          )}
+        </button>
+      )}
+
       <Dialog>
         <DialogTrigger asChild>
           <motion.div

@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, ArrowRight, Clock, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar, ArrowRight, Clock, X, Trash2, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { 
   Dialog, 
@@ -14,11 +16,15 @@ import {
   DialogDescription 
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { deletePostAction } from "@/actions/posts";
+import { toast } from "sonner";
 
 import ChronicleReader from "./chronicle-reader";
 
 interface BlogListProps {
   posts: any[];
+  isAdmin?: boolean;
+  onDelete?: (postId: string) => void;
 }
 
 function getCleanPreview(content: string) {
@@ -32,7 +38,24 @@ function getCleanPreview(content: string) {
     .trim();
 }
 
-export default function BlogList({ posts }: BlogListProps) {
+export default function BlogList({ posts, isAdmin = false, onDelete }: BlogListProps) {
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  async function handleDelete(postId: string) {
+    if (!confirm("Are you sure you want to delete this chronicle?")) return;
+
+    setDeletingId(postId);
+    const result = await deletePostAction(postId);
+    setDeletingId(null);
+
+    if (result.success) {
+      toast.success("Chronicle deleted");
+      if (onDelete) onDelete(postId);
+    } else {
+      toast.error(result.error || "Failed to delete chronicle");
+    }
+  }
+
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-muted-foreground border-2 border-dashed border-border rounded-[2rem] bg-muted/30 backdrop-blur-md">
@@ -70,32 +93,56 @@ export default function BlogList({ posts }: BlogListProps) {
           })
         }}
       />
-      {posts.map((post, index) => (
-        <motion.div
-          key={post._id || post.id}
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <Card className="group relative overflow-hidden bg-secondary/20 backdrop-blur-xl border border-border hover:border-primary/40 transition-all duration-500 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl">
-            <div className="p-6 md:p-12">
-              <div className="flex flex-wrap items-center gap-4 md:gap-6 text-xs md:text-sm text-muted-foreground mb-4 md:mb-6 font-light tracking-widest uppercase">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-3.5 h-3.5 md:w-4 h-4 text-primary" />
-                  {format(new Date(post.createdAt), "MMMM dd, yyyy")}
+      {posts.map((post, index) => {
+        const postId = post._id || post.id;
+        const isDeleting = deletingId === postId;
+
+        return (
+          <motion.div
+            key={postId}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Card className="group relative overflow-hidden bg-secondary/20 backdrop-blur-xl border border-border hover:border-primary/40 transition-all duration-500 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl">
+              {/* Admin Delete Button */}
+              {isAdmin && (
+                <div className="absolute top-4 right-4 md:top-8 md:right-8 z-30">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => handleDelete(postId)}
+                    disabled={isDeleting}
+                    className="h-9 w-9 md:h-11 md:w-11 rounded-full bg-red-600/80 hover:bg-red-600 text-white backdrop-blur-md transition-all shadow-lg hover:scale-105 active:scale-95 border border-white/20"
+                    title="Delete Chronicle"
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
+                    )}
+                  </Button>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-3.5 h-3.5 md:w-4 h-4 text-primary" />
-                  {Math.ceil(post.content.split(' ').length / 200)} min read
+              )}
+
+              <div className="p-6 md:p-12">
+                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-xs md:text-sm text-muted-foreground mb-4 md:mb-6 font-light tracking-widest uppercase pr-12">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 md:w-4 h-4 text-primary" />
+                    {format(new Date(post.createdAt), "MMMM dd, yyyy")}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5 md:w-4 h-4 text-primary" />
+                    {Math.ceil(post.content.split(' ').length / 200)} min read
+                  </div>
                 </div>
-              </div>
-              
-              <CardTitle className="text-2xl sm:text-3xl md:text-5xl font-black mb-6 md:mb-8 leading-tight tracking-tighter group-hover:text-primary transition-colors duration-500">
-                {post.title}
-              </CardTitle>
-              
-              <CardContent className="p-0">
+                
+                <CardTitle className="text-2xl sm:text-3xl md:text-5xl font-black mb-6 md:mb-8 leading-tight tracking-tighter group-hover:text-primary transition-colors duration-500">
+                  {post.title}
+                </CardTitle>
+                
+                <CardContent className="p-0">
                 <p className="text-muted-foreground text-base md:text-xl line-clamp-3 mb-8 md:mb-10 leading-relaxed font-light">
                   {getCleanPreview(post.content)}
                 </p>
@@ -158,7 +205,8 @@ export default function BlogList({ posts }: BlogListProps) {
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-[80px] rounded-full group-hover:bg-primary/20 transition-colors duration-700" />
           </Card>
         </motion.div>
-      ))}
+      );
+    })}
     </div>
   );
 }
