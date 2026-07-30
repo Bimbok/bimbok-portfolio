@@ -198,40 +198,45 @@ export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListPro
         </div>
       )}
 
-      {/* Primary View (Active for viewers, focus for admin) */}
+      {/* Primary View (Active resume for all viewers) */}
       <AnimatePresence mode="wait">
         {activeResume && (
-          <motion.div
-            key="active-view"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="w-full h-[80vh] bg-secondary/10 backdrop-blur-xl border border-border rounded-[2rem] overflow-hidden relative"
-          >
-            {/* Protective Overlay to discourage download (doesn't prevent savvy users) */}
+          <div className="space-y-4">
             {!isAdmin && (
-              <div 
-                className="absolute inset-0 z-10 pointer-events-none select-none" 
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            )}
-            
-            <iframe
-              src={getGDrivePreviewUrl(activeResume.url)}
-              className="w-full h-full border-none"
-              title="Resume Preview"
-              onContextMenu={(e) => e.preventDefault()}
-              allow="autoplay"
-            />
-            
-            {!isAdmin && (
-              <div className="absolute top-4 right-4 z-20 pointer-events-none">
-                <div className="bg-black/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-[10px] text-white/60 uppercase tracking-widest font-black">
-                  Protected View
-                </div>
+              <div className="flex items-center justify-between px-2">
+                <h3 className="font-bold text-base sm:text-lg text-foreground flex items-center gap-2 truncate pr-4">
+                  <FileText className="w-5 h-5 text-primary shrink-0" />
+                  <span className="truncate">{activeResume.name}</span>
+                </h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full gap-2 font-bold text-xs bg-secondary/30 backdrop-blur-md border-border hover:bg-primary hover:text-primary-foreground transition-all shrink-0"
+                  asChild
+                >
+                  <a href={activeResume.url} target="_blank" rel="noopener noreferrer">
+                    <Download className="w-4 h-4" />
+                    Download Resume
+                  </a>
+                </Button>
               </div>
             )}
-          </motion.div>
+
+            <motion.div
+              key="active-view"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="w-full h-[80vh] bg-secondary/10 backdrop-blur-xl border border-border rounded-[2rem] overflow-hidden relative shadow-2xl"
+            >
+              <iframe
+                src={getGDrivePreviewUrl(activeResume.url)}
+                className="w-full h-full border-none"
+                title="Resume Preview"
+                allow="autoplay"
+              />
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
