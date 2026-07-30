@@ -74,3 +74,28 @@ export async function setActiveResumeAction(id: string) {
     return { success: false, error: error.message || "Failed to set active" };
   }
 }
+
+export async function updateResumeAction(id: string, name: string, url: string) {
+  const session = await getSession();
+  if (!session) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  if (!name || !url) {
+    return { success: false, error: "Both title and link are required" };
+  }
+
+  try {
+    await dbConnect();
+    const updatedResume = await Resume.findByIdAndUpdate(
+      id,
+      { name, url },
+      { new: true }
+    );
+    revalidatePath("/posts");
+    return { success: true, resume: JSON.parse(JSON.stringify(updatedResume)) };
+  } catch (error: any) {
+    console.error("Resume update error:", error);
+    return { success: false, error: error.message || "Failed to update resume" };
+  }
+}

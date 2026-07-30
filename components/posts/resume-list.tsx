@@ -4,15 +4,19 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { 
   FileText, 
   Download, 
   Trash2, 
   CheckCircle2, 
   Circle,
-  Loader2
+  Loader2,
+  Pencil
 } from "lucide-react";
-import { deleteResumeAction, setActiveResumeAction } from "@/actions/resumes";
+import { deleteResumeAction, setActiveResumeAction, updateResumeAction } from "@/actions/resumes";
 import { toast } from "sonner";
 
 interface ResumeListProps {
@@ -40,6 +44,10 @@ function getGDrivePreviewUrl(url: string) {
 
 export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [editingResume, setEditingResume] = useState<any | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editUrl, setEditUrl] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
   
   const activeResume = resumes.find(r => r.isActive);
   const displayResumes = isAdmin ? resumes : (activeResume ? [activeResume] : []);
@@ -72,6 +80,30 @@ export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListPro
       })));
     } else {
       toast.error(result.error);
+    }
+  }
+
+  function handleStartEdit(resume: any) {
+    setEditingResume(resume);
+    setEditName(resume.name || "");
+    setEditUrl(resume.url || "");
+  }
+
+  async function handleSaveEdit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editingResume) return;
+
+    setIsUpdating(true);
+    const resId = editingResume._id || editingResume.id;
+    const result = await updateResumeAction(resId, editName, editUrl);
+    setIsUpdating(false);
+
+    if (result.success && result.resume) {
+      toast.success("Resume updated successfully");
+      onUpdate(resumes.map(r => ((r._id || r.id) === resId ? result.resume : r)));
+      setEditingResume(null);
+    } else {
+      toast.error(result.error || "Failed to update resume");
     }
   }
 
@@ -121,6 +153,16 @@ export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListPro
                         title="Set Active"
                       >
                         {resume.isActive ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" /> : <Circle className="w-4 h-4 sm:w-5 sm:h-5" />}
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8.5 w-8.5 sm:h-10 sm:w-10 text-muted-foreground hover:text-primary"
+                        onClick={() => handleStartEdit(resume)}
+                        disabled={loadingId === (resume._id || resume.id)}
+                        title="Edit Resume Title & Link"
+                      >
+                        <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
                       </Button>
                       <Button
                         size="icon"
@@ -192,6 +234,66 @@ export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListPro
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Edit Resume Modal */}
+      <Dialog open={!!editingResume} onOpenChange={(open) => !open && setEditingResume(null)}>
+        <DialogContent className="sm:max-w-[425px] bg-background/90 backdrop-blur-3xl border-border rounded-[2.5rem] p-6 sm:p-8 shadow-2xl">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-2xl font-black text-foreground">Edit Resume</DialogTitle>
+            <DialogDescription className="text-muted-foreground text-sm font-light">
+              Update title or Google Drive share link for this resume.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSaveEdit} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name" className="text-xs font-semibold text-foreground/80 ml-1">
+                Resume Title
+              </Label>
+              <Input
+                id="edit-name"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                placeholder="e.g. resume-v4-fullstack.pdf"
+                required
+                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary px-4 text-sm"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-url" className="text-xs font-semibold text-foreground/80 ml-1">
+                Google Drive Share Link / URL
+              </Label>
+              <Input
+                id="edit-url"
+                value={editUrl}
+                onChange={(e) => setEditUrl(e.target.value)}
+                placeholder="https://drive.google.com/file/d/..."
+                required
+                className="bg-secondary/20 border-border text-foreground h-12 rounded-xl focus:ring-primary focus:border-primary px-4 text-sm"
+              />
+            </div>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setEditingResume(null)}
+                disabled={isUpdating}
+                className="rounded-xl h-11 px-5"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isUpdating}
+                className="rounded-xl h-11 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg"
+              >
+                {isUpdating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {isUpdating ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
