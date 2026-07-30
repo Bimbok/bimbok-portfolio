@@ -97,50 +97,54 @@ export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListPro
               <Card className={`relative overflow-hidden bg-secondary/20 backdrop-blur-xl border-2 transition-all duration-500 rounded-[1.5rem] ${
                 resume.isActive ? "border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" : "border-border"
               }`}>
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className={`p-3 rounded-xl ${resume.isActive ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
-                        <FileText className="w-6 h-6" />
+                <CardContent className="p-3.5 sm:p-6">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 sm:gap-4 min-w-0 flex-1">
+                      <div className={`p-2.5 sm:p-3 rounded-xl shrink-0 ${resume.isActive ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
+                        <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
-                      <div>
-                        <h3 className="font-bold text-lg truncate max-w-[150px] sm:max-w-[200px]">{resume.name}</h3>
-                        <p className="text-xs text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-bold text-base sm:text-lg truncate">{resume.name}</h3>
+                        <p className="text-[11px] sm:text-xs text-muted-foreground truncate">
                           {new Date(resume.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                       <Button
                         size="icon"
                         variant="ghost"
                         onClick={() => handleSetActive(resume._id || resume.id)}
                         disabled={loadingId === (resume._id || resume.id) || resume.isActive}
-                        className={resume.isActive ? "text-primary" : "text-muted-foreground hover:text-primary"}
+                        className={`h-8.5 w-8.5 sm:h-10 sm:w-10 ${resume.isActive ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+                        title="Set Active"
                       >
-                        {resume.isActive ? <CheckCircle2 className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+                        {resume.isActive ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" /> : <Circle className="w-4 h-4 sm:w-5 sm:h-5" />}
                       </Button>
                       <Button
                         size="icon"
                         variant="ghost"
+                        className="h-8.5 w-8.5 sm:h-10 sm:w-10"
                         asChild
+                        title="Download Resume"
                       >
                         <a href={resume.url} target="_blank" rel="noopener noreferrer">
-                          <Download className="w-5 h-5" />
+                          <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                         </a>
                       </Button>
                       <Button
                         size="icon"
                         variant="ghost"
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="h-8.5 w-8.5 sm:h-10 sm:w-10 text-destructive hover:text-destructive hover:bg-destructive/10"
                         onClick={() => handleDelete(resume._id || resume.id)}
                         disabled={loadingId === (resume._id || resume.id)}
+                        title="Delete Resume"
                       >
                         {loadingId === (resume._id || resume.id) ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                         ) : (
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                         )}
                       </Button>
                     </div>
