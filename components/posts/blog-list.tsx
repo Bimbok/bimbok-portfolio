@@ -100,10 +100,10 @@ export default function BlogList({ posts, isAdmin = false, onDelete }: BlogListP
         return (
           <motion.div
             key={postId}
-            initial={{ opacity: 0, y: 30 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
           >
             <Card className="group relative overflow-hidden bg-secondary/20 backdrop-blur-xl border border-border hover:border-primary/40 transition-all duration-500 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl">
               {/* Admin Delete Button */}

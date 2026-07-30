@@ -122,8 +122,7 @@ export default function ResumeList({ resumes, isAdmin, onUpdate }: ResumeListPro
           {resumes.map((resume) => (
             <motion.div
               key={resume._id || resume.id}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={false}
               animate={{ opacity: 1, scale: 1 }}
             >
               <Card className={`relative overflow-hidden bg-secondary/20 backdrop-blur-xl border-2 transition-all duration-500 rounded-[1.5rem] ${

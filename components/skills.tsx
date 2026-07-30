@@ -150,7 +150,7 @@ const skills = [
 
 export default function Skills({ darkMode }: SkillsProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true });
 
   const containerVariants = {
     hidden: { opacity: 0 },

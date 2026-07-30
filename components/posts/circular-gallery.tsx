@@ -175,13 +175,13 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      initial={false}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true }}
       transition={{ 
-        duration: 0.8, 
-        delay: index * 0.05,
-        ease: [0.16, 1, 0.3, 1]
+        duration: 0.5, 
+        delay: index * 0.03,
+        ease: "easeOut"
       }}
       className="perspective-1000 relative group/wrapper"
     >

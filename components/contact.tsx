@@ -22,7 +22,7 @@ interface ContactProps {
 
 export default function Contact({ darkMode }: ContactProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true });
   const [formData, setFormData] = useState({
     name: "",
     email: "",

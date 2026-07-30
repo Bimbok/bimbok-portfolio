@@ -21,7 +21,7 @@ interface AboutProps {
 
 export default function About({ darkMode }: AboutProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true });
 
   const containerVariants = {
     hidden: { opacity: 0 },
