@@ -20,7 +20,7 @@ const tapLines = [
 const aboutLines = [
   "He is Bimbok, a full-stack developer from Kolkata.",
   "He builds expressive, accessible web experiences.",
-  "Core stack: React, Next.js, Node.js, Python, MongoDB.",
+  "Core stack: React, Next.js, Node.js, Python, Scikit-Learn, MySQL, MongoDB.",
   "He enjoys terminal workflows, Neovim, and clean UI systems.",
   "Currently pursuing B.Tech in Information Technology.",
   "Focused on building digital solutions that simplify real-world problems.",

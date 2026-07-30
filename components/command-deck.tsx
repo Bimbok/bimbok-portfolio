@@ -47,7 +47,7 @@ const fsRoot: FsNode = {
         "stack.txt": {
           type: "file",
           content:
-            "React, Next.js, TypeScript, Node.js, Python, MongoDB, Tailwind CSS, Framer Motion, etc",
+            "React, Next.js, TypeScript, Node.js, Python, Scikit-Learn, Machine Learning, MySQL, PostgreSQL, MongoDB, Tailwind CSS, Framer Motion, etc",
         },
       },
     },

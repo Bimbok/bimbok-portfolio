@@ -20,6 +20,9 @@ import {
   Terminal,
   Layers,
   Table,
+  Brain,
+  Sparkles,
+  LineChart,
 } from "lucide-react";
 import { IconWrapper } from "./ui/icon-wrapper";
 
@@ -52,7 +55,36 @@ const skills = [
     color: "from-purple-400 to-pink-400",
     icon: Cpu,
   },
-  { name: "Java", level: 80, color: "from-red-400 to-rose-400", icon: Coffee },
+  {
+    name: "Scikit-Learn",
+    level: 86,
+    color: "from-amber-400 to-orange-500",
+    icon: Brain,
+  },
+  {
+    name: "Machine Learning",
+    level: 84,
+    color: "from-teal-400 to-emerald-500",
+    icon: Sparkles,
+  },
+  {
+    name: "MySQL",
+    level: 85,
+    color: "from-cyan-500 to-blue-600",
+    icon: Database,
+  },
+  {
+    name: "PostgreSQL",
+    level: 85,
+    color: "from-sky-400 to-blue-500",
+    icon: Table,
+  },
+  {
+    name: "MongoDB",
+    level: 75,
+    color: "from-green-500 to-teal-400",
+    icon: Database,
+  },
   {
     name: "Linux",
     level: 85,
@@ -65,18 +97,7 @@ const skills = [
     color: "from-zinc-400 to-stone-400",
     icon: TerminalIcon,
   },
-  {
-    name: "MongoDB",
-    level: 75,
-    color: "from-green-500 to-teal-400",
-    icon: Database,
-  },
-  {
-    name: "PostgreSQL",
-    level: 85,
-    color: "from-sky-400 to-blue-500",
-    icon: Table,
-  },
+  { name: "Java", level: 80, color: "from-red-400 to-rose-400", icon: Coffee },
   {
     name: "Flask",
     level: 82,
@@ -118,6 +139,12 @@ const skills = [
     level: 85,
     color: "from-violet-500 to-fuchsia-500",
     icon: Bot,
+  },
+  {
+    name: "Data Science & Pandas",
+    level: 83,
+    color: "from-rose-400 to-pink-500",
+    icon: LineChart,
   },
 ];
 
