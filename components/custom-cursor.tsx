@@ -1,27 +1,34 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion, useSpring } from "framer-motion"
+import { motion, useSpring, useMotionValue } from "framer-motion"
 
 interface CustomCursorProps {
   darkMode: boolean
 }
 
 export default function CustomCursor({ darkMode }: CustomCursorProps) {
-  const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
 
-  // Smooth springs for trailing effect
-  const springConfig = { damping: 20, stiffness: 200 }
-  const springX = useSpring(0, springConfig)
-  const springY = useSpring(0, springConfig)
+  // Zero-rerender motion values for native 60/120 FPS hardware acceleration
+  const cursorX = useMotionValue(-100)
+  const cursorY = useMotionValue(-100)
+
+  // Smooth springs for trailing circle
+  const springConfig = { damping: 22, stiffness: 220 }
+  const springX = useSpring(cursorX, springConfig)
+  const springY = useSpring(cursorY, springConfig)
 
   useEffect(() => {
+    // Hide cursor on touch devices to save mobile GPU cycles
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      return
+    }
+
     const onMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY })
-      springX.set(e.clientX)
-      springY.set(e.clientY)
+      cursorX.set(e.clientX)
+      cursorY.set(e.clientY)
       if (!isVisible) setIsVisible(true)
     }
 
@@ -44,10 +51,10 @@ export default function CustomCursor({ darkMode }: CustomCursorProps) {
       }
     }
 
-    window.addEventListener("mousemove", onMouseMove)
+    window.addEventListener("mousemove", onMouseMove, { passive: true })
     window.addEventListener("mousedown", onMouseDown)
     window.addEventListener("mouseup", onMouseUp)
-    window.addEventListener("mouseover", onOver)
+    window.addEventListener("mouseover", onOver, { passive: true })
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove)
@@ -55,7 +62,7 @@ export default function CustomCursor({ darkMode }: CustomCursorProps) {
       window.removeEventListener("mouseup", onMouseUp)
       window.removeEventListener("mouseover", onOver)
     }
-  }, [isVisible, springX, springY])
+  }, [isVisible, cursorX, cursorY])
 
   if (typeof window === "undefined" || !isVisible) return null
 
@@ -65,9 +72,11 @@ export default function CustomCursor({ darkMode }: CustomCursorProps) {
       <motion.div
         className="fixed top-0 left-0 w-2.5 h-2.5 rounded-full pointer-events-none z-[100] mix-blend-difference"
         style={{
-          x: position.x - 5,
-          y: position.y - 5,
-          backgroundColor: darkMode ? "white" : "white",
+          x: cursorX,
+          y: cursorY,
+          translateX: "-50%",
+          translateY: "-50%",
+          backgroundColor: "white",
         }}
         animate={{
           scale: isHovering ? 2 : 1,
@@ -77,7 +86,7 @@ export default function CustomCursor({ darkMode }: CustomCursorProps) {
 
       {/* Trailing Circle */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 border rounded-full pointer-events-none z-[100] transition-colors duration-300"
+        className="fixed top-0 left-0 w-8 h-8 border rounded-full pointer-events-none z-[100]"
         style={{
           x: springX,
           y: springY,
@@ -88,7 +97,7 @@ export default function CustomCursor({ darkMode }: CustomCursorProps) {
         }}
         animate={{
           scale: isHovering ? 2 : 1,
-          opacity: isHovering ? 0.3 : 1,
+          opacity: isHovering ? 0.35 : 0.8,
         }}
       />
       
@@ -97,8 +106,10 @@ export default function CustomCursor({ darkMode }: CustomCursorProps) {
         <motion.div
           className="fixed top-0 left-0 w-12 h-12 rounded-full pointer-events-none z-[99] bg-pink-500/10 blur-md"
           style={{
-            x: position.x - 24,
-            y: position.y - 24,
+            x: cursorX,
+            y: cursorY,
+            translateX: "-50%",
+            translateY: "-50%",
           }}
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1.5, opacity: 0.8 }}

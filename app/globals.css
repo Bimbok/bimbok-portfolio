@@ -117,9 +117,61 @@ body,
   display: none !important;
 }
 
-/* Smooth animations */
-* {
-  @apply transition-colors duration-300;
+/* Lenis Smooth Scroll CSS */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Optimized smooth color transitions for UI elements (prevents global layout & paint recalcs on scroll) */
+a,
+button,
+input,
+textarea,
+select,
+[role="button"],
+h1,
+h2,
+h3,
+h4,
+p,
+span,
+svg,
+nav,
+section,
+header,
+footer,
+.card {
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* GPU Hardware Acceleration Utilities for 60/120 FPS Rendering */
+.gpu-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.gpu-fade {
+  will-change: opacity, transform;
 }
 
 /* Gradient text animation */

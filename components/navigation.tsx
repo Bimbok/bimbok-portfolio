@@ -178,7 +178,11 @@ export default function Navigation({ darkMode }: NavigationProps) {
       const sectionId = href.split("#")[1]
       const element = document.getElementById(sectionId)
       if (element) {
-        element.scrollIntoView({ behavior: "smooth" })
+        if ((window as any).lenis) {
+          (window as any).lenis.scrollTo(element, { duration: 1.2 });
+        } else {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
       }
     } else {
       router.push(href)

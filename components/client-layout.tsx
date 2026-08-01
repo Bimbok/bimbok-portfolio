@@ -84,10 +84,14 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   );
 }
 
+import SmoothScroll from "@/components/smooth-scroll";
+
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
-      <LayoutContent>{children}</LayoutContent>
+      <SmoothScroll>
+        <LayoutContent>{children}</LayoutContent>
+      </SmoothScroll>
     </ThemeProvider>
   );
 }
