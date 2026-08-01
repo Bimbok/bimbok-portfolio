@@ -159,40 +159,38 @@ export default function BlogList({ posts, isAdmin = false, onDelete }: BlogListP
                     </motion.div>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] p-0 overflow-hidden bg-background/90 backdrop-blur-3xl border border-border rounded-[2rem] sm:rounded-[3rem] shadow-2xl">
-                    <ScrollArea className="h-full max-h-[90vh]">
-                      <div className="p-6 sm:p-10 md:p-16">
-                        <DialogHeader className="mb-8 md:mb-12">
-                          <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-6 font-light tracking-widest uppercase">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="w-4 h-4 text-primary" />
-                              {format(new Date(post.createdAt), "MMMM dd, yyyy")}
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Clock className="w-4 h-4 text-primary" />
-                              {Math.ceil(post.content.split(' ').length / 200)} min read
-                            </div>
+                    <div className="h-full max-h-[90vh] overflow-y-auto p-6 sm:p-10 md:p-16 focus:outline-none" data-lenis-prevent>
+                      <DialogHeader className="mb-8 md:mb-12">
+                        <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-6 font-light tracking-widest uppercase">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-primary" />
+                            {format(new Date(post.createdAt), "MMMM dd, yyyy")}
                           </div>
-                          <DialogTitle className="text-3xl sm:text-4xl md:text-6xl font-black leading-tight tracking-tighter text-foreground mb-4">
-                            {post.title}
-                          </DialogTitle>
-                          <DialogDescription className="sr-only">
-                            Read the full chronicle: {post.title}
-                          </DialogDescription>
-                          <div className="w-24 h-1.5 bg-gradient-to-r from-primary to-purple-500 rounded-full" />
-                        </DialogHeader>
-                        
-                        <ChronicleReader content={post.content} title={post.title} />
-
-                        <div className="mt-16 pt-8 border-t border-border flex items-center justify-between">
-                          <div className="text-sm font-bold tracking-widest text-primary uppercase">
-                            End of Chronicle
-                          </div>
-                          <div className="text-muted-foreground font-light italic">
-                            — Bratik Mukherjee
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-primary" />
+                            {Math.ceil(post.content.split(' ').length / 200)} min read
                           </div>
                         </div>
+                        <DialogTitle className="text-3xl sm:text-4xl md:text-6xl font-black leading-tight tracking-tighter text-foreground mb-4">
+                          {post.title}
+                        </DialogTitle>
+                        <DialogDescription className="sr-only">
+                          Read the full chronicle: {post.title}
+                        </DialogDescription>
+                        <div className="w-24 h-1.5 bg-gradient-to-r from-primary to-purple-500 rounded-full" />
+                      </DialogHeader>
+                      
+                      <ChronicleReader content={post.content} title={post.title} />
+
+                      <div className="mt-16 pt-8 border-t border-border flex items-center justify-between">
+                        <div className="text-sm font-bold tracking-widest text-primary uppercase">
+                          End of Chronicle
+                        </div>
+                        <div className="text-muted-foreground font-light italic">
+                          — Bratik Mukherjee
+                        </div>
                       </div>
-                    </ScrollArea>
+                    </div>
                   </DialogContent>
                 </Dialog>
               </CardContent>

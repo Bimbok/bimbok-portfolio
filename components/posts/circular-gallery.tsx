@@ -242,7 +242,7 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
             <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-foreground/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </motion.div>
         </DialogTrigger>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden bg-background/90 backdrop-blur-3xl border border-border rounded-[1.5rem] sm:rounded-[2.5rem] w-[95vw] sm:w-full">
+        <DialogContent data-lenis-prevent className="max-w-5xl p-0 overflow-hidden bg-background/90 backdrop-blur-3xl border border-border rounded-[1.5rem] sm:rounded-[2.5rem] w-[95vw] sm:w-full">
           <div className="sr-only">
             <DialogTitle>{photo.description || "Photo Preview"}</DialogTitle>
           </div>
