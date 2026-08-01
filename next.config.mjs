@@ -28,6 +28,37 @@ const nextConfig = {
     "http://localhost:3000",
     ...envAllowedOrigins,
   ],
+  async headers() {
+    return [
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/image/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
+      {
+        source: "/:path*.(woff|woff2|ttf|otf|png|jpg|jpeg|svg|webp|ico|mp3)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default nextConfig

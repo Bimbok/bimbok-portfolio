@@ -13,6 +13,7 @@ const CustomCursor = dynamic(() => import("@/components/custom-cursor"), { ssr: 
 const SplashCursor = dynamic(() => import("@/components/splash-cursor"), { ssr: false });
 const CommandDeck = dynamic(() => import("@/components/command-deck"), { ssr: false });
 const DevMascot = dynamic(() => import("@/components/dev-mascot"), { ssr: false });
+const ServiceWorkerRegister = dynamic(() => import("@/components/sw-register"), { ssr: false });
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { darkMode, setDarkMode, reducedEffects } = useTheme();
@@ -78,6 +79,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
+      <ServiceWorkerRegister />
       {children}
       <Toaster position="top-center" />
     </div>
