@@ -78,29 +78,47 @@ export default function PostsClient({ initialPhotos, initialPosts, initialResume
         </div>
 
         <TabsContent value="gallery" className="mt-0 outline-none">
-          <CircularGallery 
-            photos={photos} 
-            bend={1}
-            borderRadius={0.05}
-            scrollSpeed={2}
-            scrollEase={0.05}
-            isAdmin={isAdmin}
-            onDelete={(photoId) => setPhotos(photos.filter(p => (p._id || p.id) !== photoId))}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <CircularGallery 
+              photos={photos} 
+              bend={1}
+              borderRadius={0.05}
+              scrollSpeed={2}
+              scrollEase={0.05}
+              isAdmin={isAdmin}
+              onDelete={(photoId) => setPhotos(photos.filter(p => (p._id || p.id) !== photoId))}
+            />
+          </motion.div>
         </TabsContent>
         <TabsContent value="blogs" className="mt-0 outline-none">
-          <BlogList 
-            posts={posts} 
-            isAdmin={isAdmin}
-            onDelete={(postId) => setPosts(posts.filter(p => (p._id || p.id) !== postId))}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <BlogList 
+              posts={posts} 
+              isAdmin={isAdmin}
+              onDelete={(postId) => setPosts(posts.filter(p => (p._id || p.id) !== postId))}
+            />
+          </motion.div>
         </TabsContent>
         <TabsContent value="resume" className="mt-0 outline-none">
-          <ResumeList 
-            resumes={resumes} 
-            isAdmin={isAdmin} 
-            onUpdate={setResumes}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <ResumeList 
+              resumes={resumes} 
+              isAdmin={isAdmin} 
+              onUpdate={setResumes}
+            />
+          </motion.div>
         </TabsContent>
       </Tabs>
 
