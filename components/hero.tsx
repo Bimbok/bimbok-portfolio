@@ -143,8 +143,12 @@ export default function Hero({ darkMode, reducedEffects = false }: HeroProps) {
             <motion.button
               whileHover={{ scale: 1.05, x: 5 }}
               whileTap={{ scale: 0.95 }}
-              className="group relative px-10 py-5 rounded-full font-bold overflow-hidden"
-              onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
+              className="group relative px-10 py-5 rounded-full font-bold overflow-hidden cursor-pointer"
+              onClick={() => {
+                const el = document.getElementById("projects");
+                if ((window as any).lenis && el) (window as any).lenis.scrollTo(el, { duration: 1.6 });
+                else el?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500" />
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
@@ -156,12 +160,16 @@ export default function Hero({ darkMode, reducedEffects = false }: HeroProps) {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className={`px-10 py-5 rounded-full font-bold border-2 transition-all duration-300 ${
+              className={`px-10 py-5 rounded-full font-bold border-2 transition-all duration-300 cursor-pointer ${
                 darkMode
                   ? "border-white/10 text-white hover:bg-white/10"
                   : "border-black/5 text-gray-800 hover:bg-black/5"
               }`}
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => {
+                const el = document.getElementById("contact");
+                if ((window as any).lenis && el) (window as any).lenis.scrollTo(el, { duration: 1.6 });
+                else el?.scrollIntoView({ behavior: "smooth" });
+              }}
             >
               SAY HELLO
             </motion.button>

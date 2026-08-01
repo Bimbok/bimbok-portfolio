@@ -179,9 +179,9 @@ function GalleryItem({ photo, index, bend, borderRadius, rotationBase, velocityF
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true }}
       transition={{ 
-        duration: 0.5, 
-        delay: index * 0.03,
-        ease: "easeOut"
+        duration: 0.8, 
+        delay: index * 0.04,
+        ease: [0.16, 1, 0.3, 1]
       }}
       className="perspective-1000 relative group/wrapper"
     >
