@@ -449,8 +449,8 @@ export default function Navigation({ darkMode }: NavigationProps) {
           <div className="flex items-center gap-2 md:gap-8">
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className={`text-xl font-black bg-gradient-to-r ${
-                darkMode ? "from-pink-400 to-purple-400" : "from-pink-600 to-purple-600"
+              className={`text-xl font-heading font-black tracking-[-0.04em] bg-gradient-to-r ${
+                darkMode ? "from-pink-400 via-purple-400 to-blue-400" : "from-pink-600 via-purple-600 to-blue-600"
               } bg-clip-text text-transparent cursor-pointer hidden sm:block mr-4`}
               onClick={() => {
                 scrollToSection("#hero")
@@ -469,7 +469,7 @@ export default function Navigation({ darkMode }: NavigationProps) {
                   <motion.button
                     key={item.name}
                     onClick={() => scrollToSection(item.href)}
-                    className={`relative px-5 py-2.5 rounded-full transition-all duration-500 text-sm font-bold tracking-tight ${
+                    className={`relative px-5 py-2.5 rounded-full transition-all duration-500 text-xs sm:text-sm font-sans font-semibold tracking-wide ${
                       active
                         ? darkMode ? "text-white" : "text-black"
                         : darkMode ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black"

@@ -98,7 +98,7 @@ export default function Hero({ darkMode, reducedEffects = false }: HeroProps) {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-8"
           >
-             <motion.div
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -106,12 +106,12 @@ export default function Hero({ darkMode, reducedEffects = false }: HeroProps) {
                 darkMode ? "bg-white/5 border-white/10 text-pink-300" : "bg-white border-black/5 text-pink-600 shadow-md"
               }`}
             >
-              <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-bold tracking-widest uppercase">Digital Architect</span>
+              <Sparkles className="w-3.5 h-3.5" />
+              <span className="text-xs font-mono font-bold tracking-[0.25em] uppercase">Digital Architect</span>
             </motion.div>
 
             <h1
-              className={`text-7xl md:text-9xl font-black mb-6 tracking-tighter`}
+              className="font-heading text-7xl sm:text-8xl md:text-9xl font-black mb-6 tracking-[-0.04em] leading-[0.95]"
             >
               <span className={darkMode ? "text-white" : "text-gray-900"}>I'm </span>
               <span className={`bg-gradient-to-r ${
@@ -125,11 +125,11 @@ export default function Hero({ darkMode, reducedEffects = false }: HeroProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className={`text-xl md:text-2xl ${
-                darkMode ? "text-gray-400" : "text-gray-600"
-              } max-w-2xl mx-auto leading-relaxed font-light`}
+              className={`text-lg sm:text-xl md:text-2xl ${
+                darkMode ? "text-gray-300/90" : "text-gray-600"
+              } max-w-2xl mx-auto leading-relaxed font-sans font-light tracking-tight`}
             >
-              Crafting immersive digital experiences with <span className="font-bold text-pink-500">MERN</span> & <span className="font-bold text-purple-500">Python</span>. 
+              Crafting immersive digital experiences with <span className="font-semibold text-pink-500">MERN</span> & <span className="font-semibold text-purple-500">Python</span>. 
               Bridging the gap between complexity and elegance.
             </motion.p>
           </motion.div>

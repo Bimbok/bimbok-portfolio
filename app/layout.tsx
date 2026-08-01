@@ -1,9 +1,36 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Plus_Jakarta_Sans, Outfit, Syne, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+})
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+})
+
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
+  weight: ["700", "800"],
+  display: "swap",
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+})
+
 const siteUrl = "https://bimbok-portfolio.vercel.app"
 const previewImageUrl = `${siteUrl}/og-image.png`
 
@@ -59,7 +86,7 @@ export const metadata: Metadata = {
     description:
       "Crafting high-performance web experiences and cinematic chronicles. Explore my work and journey.",
     images: [previewImageUrl],
-    creator: "@bimbok_mkj", // Placeholder - replace with your actual X handle if different
+    creator: "@bimbok_mkj",
   },
   robots: {
     index: true,
@@ -86,8 +113,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${plusJakartaSans.variable} ${outfit.variable} ${syne.variable} ${jetbrainsMono.variable}`}>
+      <body className="font-sans antialiased selection:bg-pink-500/20 selection:text-pink-300">
         <ClientLayout>
           {children}
         </ClientLayout>

@@ -94,7 +94,12 @@ module.exports = {
         xs: "2px",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "Plus Jakarta Sans", "system-ui", "sans-serif"],
+        outfit: ["var(--font-outfit)", "Outfit", "sans-serif"],
+        syne: ["var(--font-syne)", "Syne", "sans-serif"],
+        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
+        heading: ["var(--font-outfit)", "Outfit", "sans-serif"],
+        display: ["var(--font-syne)", "Syne", "sans-serif"],
       },
     },
   },
